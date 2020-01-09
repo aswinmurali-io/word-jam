@@ -5,7 +5,7 @@ description = "A crossword game which you can play during your free time"
 authors = ["AshBlade <jeenamurali100tab@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.5"
+python = "^3.6"
 cython = "^0.29.14"
 kivy = "^1.11.1"
 kivymd = "^0.103.0"
