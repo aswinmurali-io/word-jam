@@ -7,11 +7,20 @@ authors = ["AshBlade <jeenamurali100tab@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.6"
 cython = "^0.29.14"
+pypiwin32 = "^223"
+docutils = "^0.15.2"
+pygments = "^2.5.2"
+"kivy_deps.sdl2" = "^0.2.0"
+"kivy_deps.angle" = "^0.2.0"
+"kivy_deps.glew" = "^0.2.0"
 kivy = "^1.11.1"
 kivymd = "^0.103.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^4.6"
+
+[tool.poetry.scripts]
+word-jam = "word_jam:main"
 
 [build-system]
 requires = ["poetry>=0.12"]

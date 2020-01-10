@@ -1,3 +1,5 @@
+# poetry run python -m word_jam
+
 from kivy.app import App
 from kivy.uix.button import Button
 
