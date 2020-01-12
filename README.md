@@ -10,7 +10,7 @@ The project uses `poetry` python package manager to handle the project dependies
 ## Install
 
 The `poetry` install command can be used to install all the dependies for the project.
-The dependies are stored in a virtual env. To install the `poetry` package refer [Poetry Installation]: https://python-poetry.org/docs/#installation
+The dependies are stored in a virtual env. To install the `poetry` package refer [Poetry Installation Docs](https://python-poetry.org/docs/#installation)
 
 ```shell
     $ poetry install
