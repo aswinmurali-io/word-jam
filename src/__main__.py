@@ -1,22 +1,31 @@
 #!/usr/bin/python
+import kivy
 
-from __future__ import absolute_import, division, print_function, \
-                       unicode_literals
 from kivy.app import App
-from kivy.uix.button import Button
-from kivy.uix.boxlayout import BoxLayout
+from kivy.config import Config
+from kivy.uix.widget import Widget
+
+from src.common import LOG, RES
+
+kivy.require('1.11.1')
+
+# Setting up the configuration of the game
+Config.set('kivy', 'log_dir', LOG)
+Config.set('kivy', 'allow_screensaver', False)
+Config.set('kivy', 'exit_on_escape', True)
+Config.set('kivy', 'pause_on_minimize', True)
+Config.set('kivy', 'window_icon', RES + 'win.png')
+
+Config.write()
 
 
-class MainLayout(BoxLayout):
-    def __init__(self):
-        super(MainLayout, self).__init__()
-        pass
+class MainLayout(Widget):
+    pass
 
 
 class WordJam(App):
     def build(self):
-        self.main_layout = MainLayout(orientation='vertical')
-        return self.main_layout
+        return MainLayout()
 
 
 if __name__ == "__main__":
