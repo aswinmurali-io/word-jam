@@ -38,11 +38,11 @@ This will run the src module of the project which contains all the source code
 
 ### Android
 
-To preview the project in android device. Use the `buildozer android debug` command to
+To preview the project in android device. Use the `buildozer android debug run` command to
 compile and build the apk for the project. Make sure you have followed the installation section first.
 
 ```shell
-    $ buildozer android debug
+    $ buildozer android debug run
 ```
 
 This will take a lot of time to complete.
