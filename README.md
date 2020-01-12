@@ -46,3 +46,17 @@ compile and build the apk for the project. Make sure you have followed the insta
 ```
 
 This will take a lot of time to complete.
+
+## Build
+
+### Desktop
+
+To build the project we will be using `pyinstaller` package inside `poetry` virtual env.
+The build instructions are specified in `main.spec` for desktop
+
+> Delete the .kivy folder to do proper build
+
+```shell
+    $ rm -r ~/.kivy
+    $ poetry run python -m PyInstaller main.spec
+```

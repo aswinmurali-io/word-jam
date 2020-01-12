@@ -14,9 +14,10 @@ docutils = "^0.15.2"
 pygments = "^2.5.2"
 "kivy_deps.sdl2" = { platform = "win32", version = "^0.2.0" }
 "kivy_deps.glew" = { platform = "win32", version = "^0.2.0" }
-pillow = { platform = "linux", version = "^7.0.0" }
-pygame = { platform = "linux", version = "^1.9.6" }
+pillow = "^7.0.0"
+pygame = "^1.9.6"
 kivy = "^1.11.1"
+pyinstaller = "^3.6"
 
 [tool.poetry.dev-dependencies]
 pytest = "^4.6"
