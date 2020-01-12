@@ -77,18 +77,19 @@
         BoxLayout:  # Content Canvas
 
             id: content
-            orientation: 'horizontal'
-
-            # Label:
-
-            #     text: 'Please wait...'
-            #     color: 0, 0, 0, 1
+            orientation: 'vertical'
 
             GridLayout:
 
                 id: grid
                 cols: 15
                 rows: 20
+
+            Label:
+
+                id: load_txt
+                text: 'Hold on...'
+                color: 0, 0, 0, 1
 
         BoxLayout:  # Status bar
 

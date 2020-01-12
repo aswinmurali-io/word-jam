@@ -22,11 +22,16 @@ from src.common import LOG, RES, MAX_GRID
 kivy.require('1.11.1')
 
 # Setting up the configuration of the game
+
 Config.set('kivy', 'log_dir', LOG)
+Config.set('kivy', 'log_maxfiles', 10)
 Config.set('kivy', 'exit_on_escape', True)
 Config.set('kivy', 'pause_on_minimize', False)
 Config.set('kivy', 'allow_screensaver', False)
 Config.set('kivy', 'window_icon', RES + 'win.png')
+
+Config.set('graphics', 'width', 600)
+Config.set('graphics', 'height', 750)
 
 Config.write()
 
@@ -34,6 +39,7 @@ Config.write()
 class WordButton(Button):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.disabled = True
 
 
 class MainLayout(Widget):
@@ -53,8 +59,13 @@ class WordJam(App):
         return True
 
     def async_grid(self, x):
+
+        # Generate the grid using custom button widget in loop
         for i in range(MAX_GRID):
-            self.root.ids.grid.add_widget(WordButton(text='X'))
+            self.root.ids.grid.add_widget(WordButton(text=' '))
+
+        # Delete loading txt after use
+        self.root.ids.content.remove_widget(self.root.ids.load_txt)
         return True
 
     def event_keyboard(self, window, key, *largs):
