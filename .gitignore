@@ -2,6 +2,9 @@
 .buildozer/
 bin/
 
+# Power Point live edit file
+~$src.pptx
+
 # Project garbage files
 logs/
 

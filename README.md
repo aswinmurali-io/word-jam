@@ -1,5 +1,7 @@
 # Word Jam
 
+![alt text](https://www.python.org/static/community_logos/python-powered-w-100x40.png "Python")
+
 Word Jam is a crossword game which you can play during your free time. Made using `python`
 with the help of `kivy` python package.
 The project uses `poetry` python package manager to handle the project dependies.
