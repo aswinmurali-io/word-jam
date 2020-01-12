@@ -54,8 +54,8 @@ class WordButton(Button):
             Clock.unschedule(self.fade_effect_ptr)
 
     def fansy_effect(self, x):
+        self.fade_effect(0)
         self.disabled = bool(random.randint(0, 1))
-
 
 
 class MainLayout(Widget):
@@ -77,7 +77,11 @@ class WordJam(App):
 
     def async_time(self, x):
         global stime
-        stime = (datetime.datetime.strptime(stime, '%H:%M:%S') + datetime.timedelta(seconds=1)).strftime('%H:%M:%S')
+        stime = (
+            datetime.datetime.strptime(
+                stime, '%H:%M:%S'
+            ) + datetime.timedelta(seconds=1)
+        ).strftime('%H:%M:%S')
         self.root.ids.time.text = '[b]' + stime + '[/b]'
 
     def async_grid(self, x):

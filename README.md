@@ -16,7 +16,14 @@ The dependies are stored in a virtual env. To install the `poetry` package refer
     $ poetry install
 ```
 
+If you want to preview the game in *android* device you need to install `buildozer`.
+Refer [Buildozer Installation Docs](https://buildozer.readthedocs.io/en/latest/installation.html) for proper installation
+
+> You need *Windows Subsystem For Linux* or full *Linux* environment to build game in mobile devices
+
 ## Preview
+
+### Desktop
 
 To preview the project in desktop. Use the `poetry run` command to execute the
 project. Make sure you have followed the installation section first.
@@ -26,3 +33,14 @@ project. Make sure you have followed the installation section first.
 ```
 
 This will run the src module of the project which contains all the source code
+
+### Android
+
+To preview the project in android device. Use the `buildozer android debug` command to
+compile and build the apk for the project. Make sure you have followed the installation section first.
+
+```shell
+    $ buildozer android debug
+```
+
+This will take a lot of time to complete.
