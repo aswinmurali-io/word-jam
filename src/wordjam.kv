@@ -1,7 +1,42 @@
 <MainLayout>:
-	canvas.before:
+
+    canvas.before:
+
         Color:
             rgba: 1, 1, 1, 1
         Rectangle:
             pos: self.pos
             size: self.size
+
+    BoxLayout:
+
+        size: root.size
+        orientation: 'vertical'
+
+        BoxLayout:
+
+            size_hint_y: 0.1
+            orientation: 'horizontal'
+
+            canvas.before:
+
+                Color:
+                    rgba: 0, 0, 0, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+            Label:
+
+                text: 'hi'
+                color: 1, 1, 0, 1
+
+        BoxLayout:
+
+            size: 200, 100
+            orientation: 'horizontal'
+
+            Label:
+
+                text: 'hi'
+                color: 0, 0, 0, 1
