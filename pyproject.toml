@@ -3,16 +3,19 @@ name = "src"
 version = "0.1.0"
 description = "A crossword game which you can play during your free time"
 authors = ["AshBlade <jeenamurali100tab@gmail.com>"]
+readme = 'README.md'
+homepage = "https://github.com/synccodes/word-jam"
+repository = "https://github.com/synccodes/word-jam"
 
 [tool.poetry.dependencies]
-python = "3.7.*"
-cython = "^0.29.14"
-pypiwin32 = "^223"
+python = "^3.6"
+pypiwin32 = { platform = "win32", version = "^223" }
 docutils = "^0.15.2"
 pygments = "^2.5.2"
-"kivy_deps.sdl2" = "^0.2.0"
-"kivy_deps.angle" = "^0.2.0"
-"kivy_deps.glew" = "^0.2.0"
+"kivy_deps.sdl2" = { platform = "win32", version = "^0.2.0" }
+"kivy_deps.glew" = { platform = "win32", version = "^0.2.0" }
+pillow = { platform = "linux", version = "^7.0.0" }
+pygame = { platform = "linux", version = "^1.9.6" }
 kivy = "^1.11.1"
 
 [tool.poetry.dev-dependencies]
