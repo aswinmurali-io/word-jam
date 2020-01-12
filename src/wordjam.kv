@@ -67,6 +67,7 @@
 
                 Label:
 
+                    id: time
                     text: '[b]00:00:00[/b]'
                     color: com.FONT_COLOR
                     halign: 'left'
@@ -78,11 +79,13 @@
 
             id: content
             orientation: 'vertical'
+            padding: 15
 
             GridLayout:
 
                 id: grid
-                cols: 15
+                
+                cols: 14
                 rows: 20
 
             Label:
@@ -110,5 +113,5 @@
                 halign: 'left'
                 markup: True
                 text_size: self.size
-                padding: 3, 3
+                padding: 15, 15
                 color: com.FONT_COLOR

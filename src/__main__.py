@@ -9,6 +9,8 @@ import gc
 import sys
 import kivy
 import ctypes
+import random
+import datetime
 
 from kivy.app import App
 from kivy.clock import Clock
@@ -17,7 +19,7 @@ from kivy.base import EventLoop
 from kivy.uix.button import Button
 from kivy.uix.widget import Widget
 
-from src.common import LOG, RES, MAX_GRID
+from src.common import LOG, RES, MAX_GRID, stime
 
 kivy.require('1.11.1')
 
@@ -39,7 +41,21 @@ Config.write()
 class WordButton(Button):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.opacity = 0
         self.disabled = True
+        self.fade_effect_ptr = Clock.schedule_interval(self.fade_effect, 0.001)
+        self.fantasy_effect_ptr = Clock.schedule_interval(self.fansy_effect, 2)
+
+    def fade_effect(self, x):
+        if self.opacity < 1:
+            self.opacity += 0.1
+        # Unregister event after use
+        elif self.opacity > 1:
+            Clock.unschedule(self.fade_effect_ptr)
+
+    def fansy_effect(self, x):
+        self.disabled = bool(random.randint(0, 1))
+
 
 
 class MainLayout(Widget):
@@ -52,11 +68,17 @@ class WordJam(App):
 
     def on_start(self):
         Clock.schedule_once(self.async_grid, 1)
+        Clock.schedule_interval(self.async_time, 1)
         EventLoop.window.bind(on_keyboard=self.event_keyboard)
 
     def on_pause(self):
         gc.collect()
         return True
+
+    def async_time(self, x):
+        global stime
+        stime = (datetime.datetime.strptime(stime, '%H:%M:%S') + datetime.timedelta(seconds=1)).strftime('%H:%M:%S')
+        self.root.ids.time.text = '[b]' + stime + '[/b]'
 
     def async_grid(self, x):
 
