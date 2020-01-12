@@ -1,8 +1,9 @@
 # !/usr/bin/python
+# The main game code
+
 # BUG: The pause on minimize feature seems to take too much cpu during idle
 # NOTE: The loading of the grid uses kivy clock, not multi-threading (fix it)
 # NOTE: Suppress the logging after the game is finished to improve performance
-# NOTE:     import os; os.environ["KIVY_NO_CONSOLELOG"] = '1'
 
 import gc
 import sys

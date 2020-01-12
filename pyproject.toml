@@ -14,7 +14,6 @@ pygments = "^2.5.2"
 "kivy_deps.angle" = "^0.2.0"
 "kivy_deps.glew" = "^0.2.0"
 kivy = "^1.11.1"
-kivymd = "^0.103.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^4.6"
