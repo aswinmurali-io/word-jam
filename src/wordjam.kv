@@ -1,5 +1,8 @@
+#:import com src.common
+
 <MainLayout>:
 
+    # Setting up white background for the layout
     canvas.before:
 
         Color:
@@ -21,31 +24,73 @@
             canvas.before:
 
                 Color:
-                    rgba: 0, 0, 0, 1
+                    rgba: 1, 1, 1, 1
                 Rectangle:
                     pos: self.pos
                     size: self.size
 
-            Label:
+            BoxLayout:  # Coin Display
 
-                text: 'hi'
-                color: 1, 1, 0, 1
+                pos: self.pos
+                size: self.size
+                size_hint_x: 0.5
 
-            Label:
+                Image:
 
-                text: 'hi'
-                color: 1, 1, 0, 1
+                    pos: self.pos
+                    anim_loop: 0
+                    anim_delay: 0.1
+                    size: 33, 33  # 30x30 gif, but we add some extra for space
+                    source: com.RES + 'coin.gif'
 
-        BoxLayout:
+                Label:
+                    text: '[b]0[/b]'
+                    color: com.FONT_COLOR
+                    halign: 'left'
+                    valign: 'center'
+                    markup: True
+                    text_size: self.size
 
+            BoxLayout:  # For some spacing
+
+            BoxLayout:  # Time Display
+
+                pos: self.pos
+                size: self.size
+                size_hint_x: 0.5
+
+                Image:
+
+                    pos: self.pos
+                    size: 33, 33  # 30x30 png, but we add some extra for space
+                    source: com.RES + 'clock.png'
+
+                Label:
+
+                    text: '[b]00:00:00[/b]'
+                    color: com.FONT_COLOR
+                    halign: 'left'
+                    valign: 'center'
+                    markup: True
+                    text_size: self.size
+
+        BoxLayout:  # Content Canvas
+
+            id: content
             orientation: 'horizontal'
 
-            Label:
+            # Label:
 
-                text: 'hi'
-                color: 0, 0, 0, 1
+            #     text: 'Please wait...'
+            #     color: 0, 0, 0, 1
 
-        BoxLayout:
+            GridLayout:
+
+                id: grid
+                cols: 15
+                rows: 20
+
+        BoxLayout:  # Status bar
 
             size_hint_y: 0.05
             orientation: 'horizontal'
@@ -53,15 +98,16 @@
             canvas.before:
 
                 Color:
-                    rgba: 0, 0, 0, 1
+                    rgba: 1, 1, 1, 1
                 Rectangle:
                     pos: self.pos
                     size: self.size
 
             Label:
 
-                text: 'hi'
+                text: 'Made by [b]AshBlade[/b]'
                 halign: 'left'
+                markup: True
                 text_size: self.size
                 padding: 3, 3
-                color: 1, 1, 0, 1
+                color: com.FONT_COLOR
