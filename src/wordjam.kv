@@ -15,6 +15,7 @@
 
         size: root.size
         orientation: 'vertical'
+        padding: 5 if not com.IS_MOBILE else 30
 
         BoxLayout:
 
@@ -34,13 +35,15 @@
                 pos: self.pos
                 size: self.size
                 size_hint_x: 0.5
+                orientation: 'horizontal'
 
                 Image:
 
-                    pos: self.pos
+                    pos_hint_y: 1.5
                     anim_loop: 0
                     anim_delay: 0.1
-                    size: 33, 33  # 30x30 gif, but we add some extra for space
+                    size_hint: 0.7, 0.7
+                    allow_stretch: True
                     source: com.RES + 'coin.gif'
 
                 Label:
@@ -62,7 +65,6 @@
                 Image:
 
                     pos: self.pos
-                    size: 33, 33  # 30x30 png, but we add some extra for space
                     source: com.RES + 'clock.png'
 
                 Label:
@@ -79,12 +81,11 @@
 
             id: content
             orientation: 'vertical'
-            padding: 15
+            padding: 15 if not com.IS_MOBILE else 30
 
             GridLayout:
 
                 id: grid
-                
                 cols: 14
                 rows: 20
 
@@ -107,11 +108,11 @@
                     pos: self.pos
                     size: self.size
 
-            Label:
+            Label:  # The credit text
 
-                text: 'Made by [b]AshBlade[/b]'
-                halign: 'left'
                 markup: True
-                text_size: self.size
                 padding: 15, 15
+                text_size: self.size
                 color: com.FONT_COLOR
+                text: 'Made by [b]AshBlade[/b]'
+                halign: 'left' if not com.IS_MOBILE else 'center'

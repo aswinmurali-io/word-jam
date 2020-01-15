@@ -4,6 +4,8 @@
 # BUG: The pause on minimize feature seems to take too much cpu during idle
 # NOTE: The loading of the grid uses kivy clock, not multi-threading (fix it)
 # NOTE: Suppress the logging after the game is finished to improve performance
+# NOTE: The icons of coin and clock are small enlarge it
+# NOTE: Strip the apk
 
 import gc
 import sys

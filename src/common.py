@@ -3,6 +3,12 @@
 
 import os
 
+try:
+    import android
+    IS_MOBILE = True
+except ImportError:
+    IS_MOBILE = False
+
 PATH = os.getcwd()
 LOG = PATH + '/logs/'
 RES = PATH + '/res/'
