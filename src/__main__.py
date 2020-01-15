@@ -101,10 +101,15 @@ class WordJam(App):
             sys.exit(0)
 
 
-if __name__ == "__main__":
+def main():
     gc.disable()
     # Fix blurry font because text scalling issue in windows
     if 'win32' in sys.platform:
         ctypes.windll.shcore.SetProcessDpiAwareness(1)
-    # Entry point
+    # UI entry point
     WordJam().run()
+
+
+# Entry point
+if __name__ == "__main__":
+    main()
