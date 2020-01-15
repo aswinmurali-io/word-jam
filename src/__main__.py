@@ -6,6 +6,13 @@
 # NOTE: Suppress the logging after the game is finished to improve performance
 # NOTE: The icons of coin and clock are small enlarge it
 # NOTE: Strip the apk
+#
+# lib\armeabi-v7a\libcrypto1.1.so
+# lib\armeabi-v7a\libsqlite3.so
+# res\icon.ico
+# res\banner.png
+# logs\.*
+# tests\.*
 
 import gc
 import sys
@@ -27,7 +34,6 @@ kivy.require('1.11.1')
 
 # Setting up the configuration of the game
 
-Config.set('kivy', 'log_dir', LOG)
 Config.set('kivy', 'log_maxfiles', 10)
 Config.set('kivy', 'exit_on_escape', True)
 Config.set('kivy', 'pause_on_minimize', False)

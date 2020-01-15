@@ -27,6 +27,8 @@ Refer [Buildozer Installation Docs](https://buildozer.readthedocs.io/en/latest/i
 
 ### Desktop
 
+> Delete the .kivy folder to do proper preview. Otherwise your previous configuration for other projects might affect this games
+
 To preview the project in desktop. Use the `poetry run` command to execute the
 project. Make sure you have followed the installation section first.
 
@@ -54,9 +56,8 @@ This will take a lot of time to complete.
 To build the project we will be using `pyinstaller` package inside `poetry` virtual env.
 The build instructions are specified in `main.spec` for desktop
 
-> Delete the .kivy folder to do proper build
+> Delete the .kivy folder to do proper build. Otherwise your previous configuration for other projects might affect this games
 
 ```shell
-    $ rm -r ~/.kivy
     $ poetry run python -m PyInstaller main.spec
 ```
