@@ -14,6 +14,8 @@
 # logs\.*
 # tests\.*
 
+# 252 grids 14x18
+
 import gc
 import sys
 import kivy

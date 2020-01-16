@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['main.py'],
-             pathex=['C:\\Users\\aswin\\Documents\\Repository\\word-jam'],
+             pathex=['word-jam'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -21,7 +21,7 @@ exe = EXE(pyz,
           a.scripts,
           [],
           exclude_binaries=True,
-          name='main',
+          name='Word Jam',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
