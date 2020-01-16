@@ -216,10 +216,10 @@ android.wakelock = True
 android.logcat_filters = *:S python:D
 
 # (bool) Copy library instead of making a libpymodules.so
-#android.copy_libs = 1
+android.copy_libs = 0
 
 # (str) The Android arch to build for, choices: armeabi-v7a, arm64-v8a, x86, x86_64
-android.arch = armeabi-v7a
+android.arch = armeabi-v7a,arm64-v8a,x86,x86_64
 
 #
 # Python for android (p4a) specific
