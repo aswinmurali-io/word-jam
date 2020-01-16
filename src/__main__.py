@@ -19,6 +19,7 @@
 import gc
 import sys
 import kivy
+import pprint
 import ctypes
 import random
 import datetime
@@ -30,7 +31,10 @@ from kivy.base import EventLoop
 from kivy.uix.button import Button
 from kivy.uix.widget import Widget
 
-from src.common import LOG, RES, MAX_GRID, stime
+from src.common import RES, MAX_GRID, stime
+from src.save import GRID
+
+pprint.pprint(GRID)
 
 kivy.require('1.11.1')
 
@@ -43,7 +47,7 @@ Config.set('kivy', 'allow_screensaver', False)
 Config.set('kivy', 'window_icon', RES + 'win.png')
 
 Config.set('graphics', 'width', 600)
-Config.set('graphics', 'height', 750)
+Config.set('graphics', 'height', 820)
 
 Config.write()
 
@@ -101,7 +105,7 @@ class WordJam(App):
             self.root.ids.grid.add_widget(WordButton(text=' '))
 
         # Delete loading txt after use
-        self.root.ids.content.remove_widget(self.root.ids.load_txt)
+        self.root.ids.content.remove_widget(self.root.ids.load)
         return True
 
     def event_keyboard(self, window, key, *largs):

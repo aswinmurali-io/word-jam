@@ -24,19 +24,12 @@
             size_hint_y: 0.1
             orientation: 'horizontal'
 
-            canvas.before:
-
-                Color:
-                    rgba: 1, 1, 1, 1
-                Rectangle:
-                    pos: self.pos
-                    size: self.size
-
             BoxLayout:  # Coin Display
 
                 pos: self.pos
                 size: self.size
-                size_hint_x: 0.5
+                padding: 10
+                size_hint_x: 0.8
                 orientation: 'horizontal'
 
                 Image:
@@ -49,6 +42,7 @@
                     source: com.RES + 'coin.gif'
 
                 Label:
+
                     text: '[b]0[/b]'
                     color: com.FONT_COLOR
                     halign: 'left'
@@ -60,24 +54,28 @@
 
             BoxLayout:  # Time Display
 
+                padding: 10
                 pos: self.pos
                 size: self.size
-                size_hint_x: 0.5
+                size_hint_x: 0.7
+                orientation: 'horizontal'
 
                 Image:
 
                     pos: self.pos
+                    size_hint: 0.5, 0.6
+                    allow_stretch: True
                     source: com.RES + 'clock.png'
 
                 Label:
 
+                    markup: True
                     id: time
-                    text: '[b]00:00:00[/b]'
-                    color: com.FONT_COLOR
                     halign: 'left'
                     valign: 'center'
-                    markup: True
                     text_size: self.size
+                    color: com.FONT_COLOR
+                    text: '[b]00:00:00[/b]'
 
         BoxLayout:  # Content Canvas
 
@@ -91,24 +89,14 @@
                 cols: 14
                 rows: 20
 
-            Label:
+            Image:
 
-                id: load_txt
-                text: 'Hold on...'
-                color: 0, 0, 0, 1
+                id: load
+                source: com.RES + 'banner.png'
 
         BoxLayout:  # Status bar
 
             size_hint_y: 0.05
-            orientation: 'horizontal'
-
-            canvas.before:
-
-                Color:
-                    rgba: 1, 1, 1, 1
-                Rectangle:
-                    pos: self.pos
-                    size: self.size
 
             Label:  # The credit text
 

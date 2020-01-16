@@ -47,6 +47,8 @@ compile and build the apk for the project. Make sure you have followed the insta
     $ buildozer android debug run
 ```
 
+> Device might not get detected while using Windows Subsytem For Linux. In that case manually copy the apk and install it
+
 This will take a lot of time to complete.
 
 ## Build
