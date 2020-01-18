@@ -29,8 +29,6 @@ from kivy.uix.widget import Widget
 from src.common import RES, MAX_GRID, stime, timing, kivy_timing
 from src.save import GRID, load_level
 
-print(GRID)
-
 kivy.require('1.11.1')
 
 # Setting up the configuration of the game
@@ -85,8 +83,13 @@ class WordJam(App):
 
     @timing
     def on_start(self):
-        Clock.schedule_once(self.async_grid, 1)
+        # Start the grid constructor
+        Clock.schedule_once(self.async_grid)
+        # Remove the banner logo after use
+        Clock.schedule_once(self.remove_load_logo, 3)
+        # Start the level timer
         Clock.schedule_interval(self.async_time, 1)
+        # Bind android back button to exit
         EventLoop.window.bind(on_keyboard=self.event_keyboard)
 
     @timing
@@ -106,14 +109,16 @@ class WordJam(App):
 
     @kivy_timing
     def async_grid(self, x):
-
         # Generate the grid using custom button widget in loop
         for i in range(MAX_GRID):
-            self.root.ids.grid.add_widget(WordButton(text=' '))
+            # Schedule in clock to make it faster (lazy loading)
+            Clock.schedule_once(lambda x: self.root.ids.grid.add_widget(WordButton(text=' ')))
+        return True
 
+    @kivy_timing
+    def remove_load_logo(self, x):
         # Delete loading txt after use
         self.root.ids.content.remove_widget(self.root.ids.load)
-        return True
 
     @kivy_timing
     def event_keyboard(self, window, key, *largs):
@@ -123,6 +128,8 @@ class WordJam(App):
 
 @kivy_timing
 def main():
+    # For this game, disabling is necessary
+    gc.disable()
     # Load the level
     load_level(1)
     # Fix blurry font because text scalling issue in windows
