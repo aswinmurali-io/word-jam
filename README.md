@@ -61,5 +61,5 @@ The build instructions are specified in `main.spec` for desktop
 > Delete the .kivy folder to do proper build. Otherwise your previous configuration for other projects might affect this games
 
 ```shell
-    $ poetry run python -m PyInstaller main.spec
+    $ poetry run python -m PyInstaller pyinstaller.spec
 ```
