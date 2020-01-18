@@ -4,9 +4,8 @@
 # BUG: The pause on minimize feature seems to take too much cpu during idle
 # NOTE: The loading of the grid uses kivy clock, not multi-threading (fix it)
 # NOTE: Suppress the logging after the game is finished to improve performance
-# NOTE: The icons of coin and clock are small enlarge it
-# NOTE: Strip the apk
 #
+# NOTE: Strip the apk
 # lib\armeabi-v7a\libcrypto1.1.so
 # lib\armeabi-v7a\libsqlite3.so
 # res\icon.ico
@@ -14,14 +13,10 @@
 # logs\.*
 # tests\.*
 
-# 252 grids 14x18
-
 import gc
 import sys
 import kivy
-import pprint
 import ctypes
-import random
 import datetime
 
 from kivy.app import App
@@ -31,35 +26,46 @@ from kivy.base import EventLoop
 from kivy.uix.button import Button
 from kivy.uix.widget import Widget
 
-from src.common import RES, MAX_GRID, stime
-from src.save import GRID
+from src.common import RES, MAX_GRID, stime, timing, kivy_timing
+from src.save import GRID, load_level
 
-pprint.pprint(GRID)
+print(GRID)
 
 kivy.require('1.11.1')
 
 # Setting up the configuration of the game
 
 Config.set('kivy', 'log_maxfiles', 10)
+Config.set('kivy', 'log_level', 'debug')
 Config.set('kivy', 'exit_on_escape', True)
 Config.set('kivy', 'pause_on_minimize', False)
 Config.set('kivy', 'allow_screensaver', False)
 Config.set('kivy', 'window_icon', RES + 'win.png')
 
-Config.set('graphics', 'width', 600)
-Config.set('graphics', 'height', 820)
+Config.set('graphics', 'width', 580)
+Config.set('graphics', 'height', 850)
 
 Config.write()
 
 
 class WordButton(Button):
+    @kivy_timing
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.opacity = 0
-        self.disabled = True
+        self.text = str(GRID.popleft())
+        self.level_logic()
         self.fade_effect_ptr = Clock.schedule_interval(self.fade_effect, 0.001)
-        self.fantasy_effect_ptr = Clock.schedule_interval(self.fansy_effect, 2)
 
+    # @kivy_timing
+    def level_logic(self):
+        if self.text == '0':
+            self.disabled = True
+            self.text = ''
+        else:
+            self.disabled = False
+
+    # @kivy_timing
     def fade_effect(self, x):
         if self.opacity < 1:
             self.opacity += 0.1
@@ -67,28 +73,28 @@ class WordButton(Button):
         elif self.opacity > 1:
             Clock.unschedule(self.fade_effect_ptr)
 
-    def fansy_effect(self, x):
-        self.fade_effect(0)
-        self.disabled = bool(random.randint(0, 1))
-
 
 class MainLayout(Widget):
     pass
 
 
 class WordJam(App):
+    @timing
     def build(self):
         return MainLayout()
 
+    @timing
     def on_start(self):
         Clock.schedule_once(self.async_grid, 1)
         Clock.schedule_interval(self.async_time, 1)
         EventLoop.window.bind(on_keyboard=self.event_keyboard)
 
+    @timing
     def on_pause(self):
         gc.collect()
         return True
 
+    @kivy_timing
     def async_time(self, x):
         global stime
         stime = (
@@ -98,6 +104,7 @@ class WordJam(App):
         ).strftime('%H:%M:%S')
         self.root.ids.time.text = '[b]' + stime + '[/b]'
 
+    @kivy_timing
     def async_grid(self, x):
 
         # Generate the grid using custom button widget in loop
@@ -108,13 +115,16 @@ class WordJam(App):
         self.root.ids.content.remove_widget(self.root.ids.load)
         return True
 
+    @kivy_timing
     def event_keyboard(self, window, key, *largs):
         if key == 27:
             sys.exit(0)
 
 
+@kivy_timing
 def main():
-    gc.disable()
+    # Load the level
+    load_level(1)
     # Fix blurry font because text scalling issue in windows
     if 'win32' in sys.platform:
         ctypes.windll.shcore.SetProcessDpiAwareness(1)
