@@ -25,7 +25,6 @@ stime = '00:00:00'  # The level time counter
 
 # This function is used to measure the time take by different functions
 # both timing and timeit do the same thing but different ways.
-
 # timing -> does not work with kivy
 def timing(f):
     def wrap(*args):

@@ -13,16 +13,16 @@ package.domain = org.blitzon
 source.dir = .
 
 # (list) Source files to include (let empty to include all the files)
-source.include_exts = py,png,jpg,kv,atlas,gif,ico,csv
+source.include_exts = py,png,jpg,kv,atlas,gif,csv
 
 # (list) List of inclusions using pattern matching
 #source.include_patterns = assets/*,images/*.png
 
 # (list) Source files to exclude (let empty to not exclude anything)
-source.exclude_exts = spec, LICENSE, *.ico
+source.exclude_exts = spec,LICENSE,ico
 
 # (list) List of directory to exclude (let empty to not exclude anything)
-source.exclude_dirs = tests, bin, logs, res/icon.ico, res/banner.png
+source.exclude_dirs = tests,bin,logs
 
 # (list) List of exclusions using pattern matching
 #source.exclude_patterns = license,images/*/*.jpg
@@ -36,7 +36,7 @@ version = 0.1
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy
+requirements = python3,kivy,colorama
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes

@@ -4,6 +4,7 @@
 # BUG: The pause on minimize feature seems to take too much cpu during idle
 # NOTE: The loading of the grid uses kivy clock, not multi-threading (fix it)
 # NOTE: Suppress the logging after the game is finished to improve performance
+# NOTE: Clock.schedule_once(self.remove_load_logo, 2) -> set it to 1 when building
 #
 # NOTE: Strip the apk
 # lib\armeabi-v7a\libcrypto1.1.so
@@ -86,7 +87,7 @@ class WordJam(App):
         # Start the grid constructor
         Clock.schedule_once(self.async_grid)
         # Remove the banner logo after use
-        Clock.schedule_once(self.remove_load_logo, 3)
+        Clock.schedule_once(self.remove_load_logo, 2)
         # Start the level timer
         Clock.schedule_interval(self.async_time, 1)
         # Bind android back button to exit
