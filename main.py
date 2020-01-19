@@ -1,4 +1,5 @@
 # !/usr/bin/python
+# Entry Point Python File for Word Jam
 #  ___       __   ________  ________  ________             ___  ________  _____ ______
 # |\  \     |\  \|\   __  \|\   __  \|\   ___ \           |\  \|\   __  \|\   _ \  _   \
 # \ \  \    \ \  \ \  \|\  \ \  \|\  \ \  \_|\ \          \ \  \ \  \|\  \ \  \\\__\ \  \
@@ -22,6 +23,8 @@
 #
 
 from src.__main__ import main
+
+__version__ = '0.0.1'
 
 # Entry point
 if __name__ == "__main__":

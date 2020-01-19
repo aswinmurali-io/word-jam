@@ -13,6 +13,7 @@ from kivy.logger import Logger
 
 init(autoreset=True)
 
+GRID_ID = -1
 GRID = deque()  # The grid deque where all the level information is stored
 MAX_GRID = 280  # The maximum grid to store, used to change difficulty of level
 PATH = os.getcwd()  # The master path of the project
@@ -21,6 +22,12 @@ RES = PATH + '/res/'  # The folder where the resources are stored
 FONT_COLOR = 0.5, 0.5, 0.5, 1  # The font color of the game
 IS_MOBILE = True if 'android' in sys.modules else False  # mobile detection
 stime = '00:00:00'  # The level time counter
+
+
+def generate_grid_id():
+    global GRID_ID
+    GRID_ID += 1
+    return str(GRID_ID)
 
 
 # This function is used to measure the time take by different functions
@@ -43,5 +50,5 @@ def kivy_timing(func):
         startTime = time.time()
         func(*args, **kwargs)
         elapsedTime = time.time() - startTime
-        Logger.debug(Style.DIM + 'Speed: function ' + Fore.CYAN + Style.NORMAL + func.__name__ + '() ' + Style.DIM + ' -> ' + Fore.RED + str(elapsedTime * 1000) + 'ms' + Fore.RESET)
+        Logger.debug(Style.DIM + 'Speed: function ' + Fore.CYAN + Style.NORMAL + func.__name__ + '() ' + Style.DIM + ' -> ' + Fore.RED + str(round(elapsedTime * 1000)) + 'ms' + Fore.RESET)
     return newfunc

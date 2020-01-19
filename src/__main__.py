@@ -5,6 +5,7 @@
 # NOTE: The loading of the grid uses kivy clock, not multi-threading (fix it)
 # NOTE: Suppress the logging after the game is finished to improve performance
 # NOTE: Clock.schedule_once(self.remove_load_logo, 2) -> set to 1 when building
+# NOTE: import os; os.environ["KIVY_NO_CONSOLELOG"] = '1' use this before build
 #
 # NOTE: Strip the apk
 # lib\armeabi-v7a\libcrypto1.1.so
@@ -27,8 +28,8 @@ from kivy.base import EventLoop
 from kivy.uix.button import Button
 from kivy.uix.widget import Widget
 
-from src.common import RES, MAX_GRID, stime, timing, kivy_timing
-from src.save import GRID, load_level
+from src.common import RES, MAX_GRID, stime, timing, kivy_timing, generate_grid_id
+from src.save import GRID, load_level, validate_character
 
 kivy.require('1.11.1')
 
@@ -48,23 +49,50 @@ Config.write()
 
 
 class WordButton(Button):
-    @kivy_timing
+    # @kivy_timing -> Slow
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.opacity = 0
+        self.id = generate_grid_id()
         self.text = str(GRID.popleft())
         self.level_logic()
+        self.bind(state=self.on_click)
         self.fade_effect_ptr = Clock.schedule_interval(self.fade_effect, 0.001)
+        EventLoop.window.bind(on_keyboard=self.event_keyboard)
 
-    # @kivy_timing
+    # @kivy_timing -> Slow
     def level_logic(self):
         if self.text == '0':
             self.disabled = True
             self.text = ''
         else:
             self.disabled = False
+            if self.text.islower():
+                self.text = ''
 
     # @kivy_timing
+    def on_click(self, instance, value):
+        if self.text == '' and not self.disabled:
+            self.text = '?'
+            self.background_normal = ''
+            self.background_color = 0, 1, 1, 1
+
+    # @kivy_timing -> Slow
+    def event_keyboard(self, window, key, *largs):
+        if self.text == '?':
+            # NOTE: Reload the level data again to check validation
+            #       This needs to be done because while building the grid
+            #       all the elements are popped out. Thus the GRID deque
+            #       was empty.
+            load_level(1)
+            if validate_character(chr(key), self.id):
+                self.text = chr(key).upper()
+            else:
+                self.text = ''
+            self.background_normal = 'atlas://data/images/defaulttheme/button'
+            self.background_color = 1, 1, 1, 1
+
+    # @kivy_timing -> Slow
     def fade_effect(self, x):
         if self.opacity < 1:
             self.opacity += 0.1

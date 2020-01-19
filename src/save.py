@@ -18,3 +18,10 @@ def load_level(level):
         for row in csv_reader:
             GRID += row
         LEVEL_PROCESSED = True
+
+
+@timing
+def validate_character(char, ID):
+    if GRID[int(ID)] == char:
+        return True
+    return False
