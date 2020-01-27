@@ -6,14 +6,7 @@
 # NOTE: Suppress the logging after the game is finished to improve performance
 # NOTE: Clock.schedule_once(self.remove_load_logo, 2) -> set to 1 when building
 # NOTE: import os; os.environ["KIVY_NO_CONSOLELOG"] = '1' use this before build
-#
 # NOTE: Strip the apk
-# lib\armeabi-v7a\libcrypto1.1.so
-# lib\armeabi-v7a\libsqlite3.so
-# res\icon.ico
-# res\banner.png
-# logs\.*
-# tests\.*
 
 import gc
 import sys
@@ -29,7 +22,7 @@ from kivy.uix.button import Button
 from kivy.uix.widget import Widget
 from kivy.core.window import Window
 
-from src.common import RES, MAX_GRID, stime, timing, kivy_timing, generate_grid_id
+from src.common import RES, MAX_GRID, DEFAULT_ATLAS, stime, timing, kivy_timing, generate_grid_id
 from src.save import GRID, load_level, validate_character
 
 kivy.require('1.11.1')
@@ -89,11 +82,11 @@ class WordButton(Button):
 
             def _(_):
                 self.text = ''
-                self.background_normal = 'atlas://data/images/defaulttheme/button'
+                self.background_normal = DEFAULT_ATLAS
                 self.background_color = 1, 1, 1, 1
 
             def _2(_):
-                self.background_normal = 'atlas://data/images/defaulttheme/button'
+                self.background_normal = DEFAULT_ATLAS
                 self.background_color = 1, 1, 1, 1
 
             if validate_character(chr(key), self.id):
@@ -102,7 +95,7 @@ class WordButton(Button):
                 Clock.schedule_once(_2, 1)
             else:
                 self.text = 'X'
-                self.background_normal = 'atlas://data/images/defaulttheme/button'
+                self.background_normal = DEFAULT_ATLAS
                 self.background_color = 1, 0, 0, 1
                 Clock.schedule_once(_, 1)
 
@@ -155,7 +148,10 @@ class WordJam(App):
         # Generate the grid using custom button widget in loop
         for i in range(MAX_GRID):
             # Schedule in clock to make it faster (lazy loading)
-            Clock.schedule_once(lambda x: self.root.ids.grid.add_widget(WordButton(text=' ')))
+            Clock.schedule_once(lambda x: self.root.ids.grid.add_widget(
+                    WordButton(text=' ')
+                )
+            )
         return True
 
     @kivy_timing

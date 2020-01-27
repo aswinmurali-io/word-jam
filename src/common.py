@@ -22,6 +22,7 @@ RES = PATH + '/res/'  # The folder where the resources are stored
 FONT_COLOR = 0.5, 0.5, 0.5, 1  # The font color of the game
 IS_MOBILE = True if 'android' in sys.modules else False  # mobile detection
 stime = '00:00:00'  # The level time counter
+DEFAULT_ATLAS = 'atlas://data/images/defaulttheme/button'
 
 
 def _(**kwargs):
