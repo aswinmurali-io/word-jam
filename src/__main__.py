@@ -27,11 +27,13 @@ from kivy.config import Config
 from kivy.base import EventLoop
 from kivy.uix.button import Button
 from kivy.uix.widget import Widget
+from kivy.core.window import Window
 
 from src.common import RES, MAX_GRID, stime, timing, kivy_timing, generate_grid_id
 from src.save import GRID, load_level, validate_character
 
 kivy.require('1.11.1')
+Window.set_title("Word Jam")
 
 # Setting up the configuration of the game
 
@@ -80,17 +82,29 @@ class WordButton(Button):
     # @kivy_timing -> Slow
     def event_keyboard(self, window, key, *largs):
         if self.text == '?':
-            # NOTE: Reload the level data again to check validation
-            #       This needs to be done because while building the grid
-            #       all the elements are popped out. Thus the GRID deque
-            #       was empty.
+            # NOTE: Reload the level data again to check validation This needs
+            # to be done because while building the grid all the elements are
+            # popped out. Thus the GRID deque was empty.
             load_level(1)
-            if validate_character(chr(key), self.id):
-                self.text = chr(key).upper()
-            else:
+
+            def _(_):
                 self.text = ''
-            self.background_normal = 'atlas://data/images/defaulttheme/button'
-            self.background_color = 1, 1, 1, 1
+                self.background_normal = 'atlas://data/images/defaulttheme/button'
+                self.background_color = 1, 1, 1, 1
+
+            def _2(_):
+                self.background_normal = 'atlas://data/images/defaulttheme/button'
+                self.background_color = 1, 1, 1, 1
+
+            if validate_character(chr(key), self.id):
+                # self.text = chr(key[0]).upper()
+                self.text = chr(key).upper()
+                Clock.schedule_once(_2, 1)
+            else:
+                self.text = 'X'
+                self.background_normal = 'atlas://data/images/defaulttheme/button'
+                self.background_color = 1, 0, 0, 1
+                Clock.schedule_once(_, 1)
 
     # @kivy_timing -> Slow
     def fade_effect(self, x):
@@ -115,7 +129,7 @@ class WordJam(App):
         # Start the grid constructor
         Clock.schedule_once(self.async_grid)
         # Remove the banner logo after use
-        Clock.schedule_once(self.remove_load_logo, 2)
+        Clock.schedule_once(self.remove_load_logo, 1)
         # Start the level timer
         Clock.schedule_interval(self.async_time, 1)
         # Bind android back button to exit
@@ -152,7 +166,7 @@ class WordJam(App):
     @kivy_timing
     def event_keyboard(self, window, key, *largs):
         if key == 27:
-            sys.exit(0)
+            App.get_running_app().stop()
 
 
 @kivy_timing

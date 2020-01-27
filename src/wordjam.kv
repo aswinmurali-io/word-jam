@@ -1,6 +1,7 @@
 # The UI definitions of the game is here
 
 #:import com src.common
+#:import Window kivy.core.window.Window
 
 <MainLayout>:
 
@@ -82,6 +83,7 @@
             id: content
             orientation: 'vertical'
             padding: 15 if not com.IS_MOBILE else 30
+            on_touch_down: Window.request_keyboard(com._, self, 'text')
 
             GridLayout:
 

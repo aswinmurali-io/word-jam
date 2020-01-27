@@ -24,6 +24,10 @@ IS_MOBILE = True if 'android' in sys.modules else False  # mobile detection
 stime = '00:00:00'  # The level time counter
 
 
+def _(**kwargs):
+    pass
+
+
 def generate_grid_id():
     global GRID_ID
     GRID_ID += 1
