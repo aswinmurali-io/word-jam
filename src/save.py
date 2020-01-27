@@ -25,3 +25,24 @@ def validate_character(char, ID):
     if GRID[int(ID)] == char:
         return True
     return False
+
+
+@timing
+def save_csv(save):
+    with open(LVL + 'save.csv', 'w', newline='') as csv_file:
+        csv_writer = csv.writer(csv_file, delimiter=',')
+        csv_writer.writerows(save)
+        return True
+    return False
+
+
+@timing
+def save_level(grid_number, value):
+    global GRID
+    GRID.clear()
+    load_level('save')
+    save = []
+    for i in range(len(GRID)):
+        save.append(GRID.popleft())
+    save[grid_number] = value
+    save_csv(save)

@@ -11,7 +11,9 @@
 import gc
 import sys
 import kivy
+import shutil
 import ctypes
+import os.path
 import datetime
 
 from kivy.app import App
@@ -22,8 +24,8 @@ from kivy.uix.button import Button
 from kivy.uix.widget import Widget
 from kivy.core.window import Window
 
-from src.common import RES, MAX_GRID, DEFAULT_ATLAS, stime, timing, kivy_timing, generate_grid_id
-from src.save import GRID, load_level, validate_character
+from src.common import RES, MAX_GRID, DEFAULT_ATLAS, LVL, stime, timing, kivy_timing, generate_grid_id
+from src.save import GRID, load_level, validate_character, save_level
 
 kivy.require('1.11.1')
 Window.set_title("Word Jam")
@@ -50,7 +52,10 @@ class WordButton(Button):
         super().__init__(**kwargs)
         self.opacity = 0
         self.id = generate_grid_id()
-        self.text = str(GRID.popleft())
+        try:
+            self.text = str(GRID.popleft())
+        except IndexError:
+            self.text = 'X'
         self.level_logic()
         self.bind(state=self.on_click)
         self.fade_effect_ptr = Clock.schedule_interval(self.fade_effect, 0.001)
@@ -91,8 +96,8 @@ class WordButton(Button):
                 self.background_color = 1, 1, 1, 1
 
             if validate_character(chr(key), self.id):
-                # self.text = chr(key[0]).upper()
                 self.text = chr(key).upper()
+                save_level(int(self.id), chr(key).upper())
                 Clock.schedule_once(_2, 1)
             else:
                 self.text = 'X'
@@ -170,8 +175,11 @@ class WordJam(App):
 def main():
     # For this game, disabling is necessary
     gc.disable()
+    # Copy the first level as current level if no save slot is found
+    if not os.path.exists(LVL + 'save.csv'):
+        shutil.copyfile(LVL + '1.csv', LVL + 'save.csv')
     # Load the level
-    load_level(1)
+    load_level('save')
     # Fix blurry font because text scalling issue in windows
     if 'win32' in sys.platform:
         ctypes.windll.shcore.SetProcessDpiAwareness(1)

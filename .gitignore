@@ -7,6 +7,7 @@ bin/
 
 # Project garbage files
 logs/
+save.csv
 
 # vscode personal settings
 .vscode/
