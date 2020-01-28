@@ -34,6 +34,7 @@ Window.set_title("Word Jam")
 
 Config.set('kivy', 'log_maxfiles', 10)
 Config.set('kivy', 'log_level', 'debug')
+Config.set('graphics', 'resizable', False)
 Config.set('kivy', 'exit_on_escape', True)
 Config.set('kivy', 'pause_on_minimize', False)
 Config.set('kivy', 'allow_screensaver', False)

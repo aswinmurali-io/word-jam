@@ -38,8 +38,8 @@
                     pos_hint_y: 1.5
                     anim_loop: 0
                     anim_delay: 0.1
-                    size_hint: 0.5, 0.5
-                    allow_stretch: True
+                    size_hint: 0.3, 0.3
+                    # allow_stretch: True
                     source: com.RES + 'coin.gif'
 
                 Label:
@@ -47,7 +47,7 @@
                     text: '[b]0[/b]'
                     color: com.FONT_COLOR
                     halign: 'left'
-                    valign: 'center'
+                    valign: 'bottom'
                     markup: True
                     text_size: self.size
 
@@ -64,8 +64,9 @@
                 Image:
 
                     pos: self.pos
-                    size_hint: 0.5, 0.5
-                    allow_stretch: True
+                    size_hint: 0.3, 0.3
+                    pos_hint_y: 1.5
+                    # allow_stretch: True
                     source: com.RES + 'clock.png'
 
                 Label:
@@ -73,7 +74,7 @@
                     markup: True
                     id: time
                     halign: 'left'
-                    valign: 'center'
+                    valign: 'bottom'
                     text_size: self.size
                     color: com.FONT_COLOR
                     text: '[b]00:00:00[/b]'
