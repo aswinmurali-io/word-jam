@@ -5,14 +5,24 @@
 
 import csv
 
-from src.common import GRID, LVL, timing
+from src.common import GRID, GRID_HINT, LVL, timing
 
 LEVEL_PROCESSED = False
 
 
 @timing
+def load_level_hint(level):
+    global GRID_HINT
+    with open(LVL + str(level) + '_hint.csv') as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=',')
+        for row in csv_reader:
+            GRID_HINT += row
+
+
+@timing
 def load_level(level):
     global GRID, LEVEL_PROCESSED
+    load_level_hint(level)
     with open(LVL + str(level) + '.csv') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         for row in csv_reader:

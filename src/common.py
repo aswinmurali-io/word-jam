@@ -15,6 +15,7 @@ init(autoreset=True)
 
 GRID_ID = -1
 GRID = deque()  # The grid deque where all the level information is stored
+GRID_HINT = []
 MAX_GRID = 280  # The maximum grid to store, used to change difficulty of level
 PATH = os.getcwd()  # The master path of the project
 LVL = PATH + '/lvl/'  # The folder where the levels are stored (.csv format)

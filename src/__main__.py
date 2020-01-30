@@ -24,7 +24,9 @@ from kivy.uix.button import Button
 from kivy.uix.widget import Widget
 from kivy.core.window import Window
 
-from src.common import RES, MAX_GRID, DEFAULT_ATLAS, LVL, stime, timing, kivy_timing, generate_grid_id
+from src.common import RES, MAX_GRID, DEFAULT_ATLAS, LVL, GRID_HINT, \
+    stime, timing, kivy_timing, generate_grid_id
+
 from src.save import GRID, load_level, validate_character, save_level
 
 kivy.require('1.11.1')
@@ -34,20 +36,23 @@ Window.set_title("Word Jam")
 
 Config.set('kivy', 'log_maxfiles', 10)
 Config.set('kivy', 'log_level', 'debug')
-Config.set('graphics', 'resizable', False)
 Config.set('kivy', 'exit_on_escape', True)
 Config.set('kivy', 'pause_on_minimize', False)
 Config.set('kivy', 'allow_screensaver', False)
 Config.set('kivy', 'window_icon', RES + 'win.png')
+
 Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 
 Config.set('graphics', 'width', 580)
 Config.set('graphics', 'height', 850)
+Config.set('graphics', 'resizable', False)
 
 Config.write()
 
 
 class WordButton(Button):
+    lock = False
+
     # @kivy_timing -> Slow
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -74,10 +79,12 @@ class WordButton(Button):
 
     # @kivy_timing
     def on_click(self, instance, value):
-        if self.text == '' and not self.disabled:
+        if self.text == '' and not self.disabled and not WordButton.lock:
             self.text = '?'
+            self_pointer.root.ids.status_bar.text = GRID_HINT[int(self.id)][1:-1]
             self.background_normal = ''
             self.background_color = 0, 1, 1, 1
+            WordButton.lock = True
 
     # @kivy_timing -> Slow
     def event_keyboard(self, window, key, *largs):
@@ -86,6 +93,7 @@ class WordButton(Button):
             # to be done because while building the grid all the elements are
             # popped out. Thus the GRID deque was empty.
             load_level(1)
+            WordButton.lock = False
 
             def _(_):
                 self.text = ''
@@ -122,6 +130,8 @@ class MainLayout(Widget):
 class WordJam(App):
     @timing
     def build(self):
+        global self_pointer
+        self_pointer = self
         return MainLayout()
 
     @timing
@@ -179,6 +189,7 @@ def main():
     # Copy the first level as current level if no save slot is found
     if not os.path.exists(LVL + 'save.csv'):
         shutil.copyfile(LVL + '1.csv', LVL + 'save.csv')
+        shutil.copyfile(LVL + '1_hint.csv', LVL + 'save_hint.csv')
     # Load the level
     load_level('save')
     # Fix blurry font because text scalling issue in windows
