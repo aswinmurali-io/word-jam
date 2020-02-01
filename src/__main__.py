@@ -121,6 +121,7 @@ class WordButton(Button):
                 self.background_normal = DEFAULT_ATLAS
                 self.background_color = 1, 0, 0, 1
                 Clock.schedule_once(not_correct_letter, 1)
+
             Clock.schedule_once(set_status_bar_back_to_default, 5)
 
     # @kivy_timing -> Slow

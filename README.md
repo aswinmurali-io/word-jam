@@ -70,7 +70,7 @@ To do type check which this project follow. We use the `mypy` module. Note you n
 to do type checking. To check error type the following command
 
 ```shell
-    $ poetry run mypy --package src
+    $ poetry run mypy --package src --ignore-missing-imports
 ```
 
 > There will be some errors. Things that are dynamically loaded will not be recognised and therefore show error
