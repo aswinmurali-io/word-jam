@@ -63,3 +63,14 @@ The build instructions are specified in `main.spec` for desktop
 ```shell
     $ poetry run python -m PyInstaller pyinstaller.spec
 ```
+
+### Development
+
+To do type check which this project follow. We use the `mypy` module. Note you need atleast `Python 3.7`
+to do type checking. To check error type the following command
+
+```shell
+    $ poetry run mypy --package src
+```
+
+> There will be some errors. Things that are dynamically loaded will not be recognised and therefore show error

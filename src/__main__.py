@@ -24,8 +24,8 @@ from kivy.uix.button import Button
 from kivy.uix.widget import Widget
 from kivy.core.window import Window
 
-from src.common import RES, MAX_GRID, DEFAULT_ATLAS, LVL, GRID_HINT, \
-    stime, timing, kivy_timing, generate_grid_id
+from src.common import RES, MAX_GRID, DEFAULT_ATLAS, IS_MOBILE, LVL, \
+    GRID_HINT, DEFAULT_STATUS_TEXT, stime, timing, kivy_timing, generate_grid_id
 
 from src.save import GRID, load_level, validate_character, save_level
 
@@ -36,7 +36,7 @@ Window.set_title("Word Jam")
 
 Config.set('kivy', 'log_maxfiles', 10)
 Config.set('kivy', 'log_level', 'debug')
-Config.set('kivy', 'exit_on_escape', True)
+Config.set('kivy', 'exit_on_escape', False)
 Config.set('kivy', 'pause_on_minimize', False)
 Config.set('kivy', 'allow_screensaver', False)
 Config.set('kivy', 'window_icon', RES + 'win.png')
@@ -63,7 +63,7 @@ class WordButton(Button):
         except IndexError:
             self.text = 'X'
         self.level_logic()
-        self.bind(state=self.on_click)
+        self.bind(on_press=self.on_click)
         self.fade_effect_ptr = Clock.schedule_interval(self.fade_effect, 0.001)
         EventLoop.window.bind(on_keyboard=self.event_keyboard)
 
@@ -77,17 +77,18 @@ class WordButton(Button):
             if self.text.islower():
                 self.text = ''
 
-    # @kivy_timing
-    def on_click(self, instance, value):
+    @kivy_timing
+    def on_click(self, *largs):
         if self.text == '' and not self.disabled and not WordButton.lock:
             self.text = '?'
-            self_pointer.root.ids.status_bar.text = GRID_HINT[int(self.id)][1:-1]
+            WordButton.lock = True
             self.background_normal = ''
             self.background_color = 0, 1, 1, 1
-            WordButton.lock = True
+            self_pointer_to_word_jam_class.root.ids.status_bar.text = ("Press [b]ESC[/b] to cancel selection" if not IS_MOBILE else "Press [b]any[/b] letter to cancel selection") \
+                + ((', [b]hint[/b]: ' + GRID_HINT[int(self.id)][1:-1]) if GRID_HINT[int(self.id)][1:-1] != '' else '')
 
     # @kivy_timing -> Slow
-    def event_keyboard(self, window, key, *largs):
+    def event_keyboard(self, _, key: int, *largs):
         if self.text == '?':
             # NOTE: Reload the level data again to check validation This needs
             # to be done because while building the grid all the elements are
@@ -95,27 +96,35 @@ class WordButton(Button):
             load_level(1)
             WordButton.lock = False
 
-            def _(_):
-                self.text = ''
+            # set the grid block to it's orignal form
+            def set_grid_block_to_default(*largs):
                 self.background_normal = DEFAULT_ATLAS
                 self.background_color = 1, 1, 1, 1
 
-            def _2(_):
-                self.background_normal = DEFAULT_ATLAS
-                self.background_color = 1, 1, 1, 1
+            def not_correct_letter(*largs):
+                self.text = ''
+                set_grid_block_to_default(None)
+
+            def set_status_bar_back_to_default(*largs):
+                self_pointer_to_word_jam_class.root.ids.status_bar.text = DEFAULT_STATUS_TEXT
+
+            # Android Back button or Esc key
+            if key == 27:
+                Clock.schedule_once(not_correct_letter, 1)
 
             if validate_character(chr(key), self.id):
                 self.text = chr(key).upper()
                 save_level(int(self.id), chr(key).upper())
-                Clock.schedule_once(_2, 1)
+                Clock.schedule_once(set_grid_block_to_default, 1)
             else:
                 self.text = 'X'
                 self.background_normal = DEFAULT_ATLAS
                 self.background_color = 1, 0, 0, 1
-                Clock.schedule_once(_, 1)
+                Clock.schedule_once(not_correct_letter, 1)
+            Clock.schedule_once(set_status_bar_back_to_default, 5)
 
     # @kivy_timing -> Slow
-    def fade_effect(self, x):
+    def fade_effect(self, *largs):
         if self.opacity < 1:
             self.opacity += 0.1
         # Unregister event after use
@@ -129,13 +138,13 @@ class MainLayout(Widget):
 
 class WordJam(App):
     @timing
-    def build(self):
-        global self_pointer
-        self_pointer = self
+    def build(self) -> MainLayout:
+        global self_pointer_to_word_jam_class
+        self_pointer_to_word_jam_class = self
         return MainLayout()
 
     @timing
-    def on_start(self):
+    def on_start(self) -> None:
         # Start the grid constructor
         Clock.schedule_once(self.async_grid)
         # Remove the banner logo after use
@@ -146,12 +155,12 @@ class WordJam(App):
         EventLoop.window.bind(on_keyboard=self.event_keyboard)
 
     @timing
-    def on_pause(self):
+    def on_pause(self) -> bool:
         gc.collect()
         return True
 
     @kivy_timing
-    def async_time(self, x):
+    def async_time(self, *largs) -> None:
         global stime
         stime = (
             datetime.datetime.strptime(
@@ -161,29 +170,26 @@ class WordJam(App):
         self.root.ids.time.text = '[b]' + stime + '[/b]'
 
     @kivy_timing
-    def async_grid(self, x):
+    def async_grid(self, *largs) -> bool:
         # Generate the grid using custom button widget in loop
         for i in range(MAX_GRID):
             # Schedule in clock to make it faster (lazy loading)
-            Clock.schedule_once(lambda x: self.root.ids.grid.add_widget(
-                    WordButton(text=' ')
-                )
-            )
+            Clock.schedule_once(lambda x: self.root.ids.grid.add_widget(WordButton(text=' ')))
         return True
 
     @kivy_timing
-    def remove_load_logo(self, x):
+    def remove_load_logo(self, *largs) -> None:
         # Delete loading txt after use
         self.root.ids.content.remove_widget(self.root.ids.load)
 
     @kivy_timing
-    def event_keyboard(self, window, key, *largs):
-        if key == 27:
+    def event_keyboard(self, _, key: int, *largs) -> None:
+        if key == 27 and IS_MOBILE:
             App.get_running_app().stop()
 
 
 @kivy_timing
-def main():
+def main() -> None:
     # For this game, disabling is necessary
     gc.disable()
     # Copy the first level as current level if no save slot is found
