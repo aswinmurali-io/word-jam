@@ -6,7 +6,6 @@
 # NOTE: Suppress the logging after the game is finished to improve performance
 # NOTE: Clock.schedule_once(self.remove_load_logo, 2) -> set to 1 when building
 # NOTE: import os; os.environ["KIVY_NO_CONSOLELOG"] = '1' use this before build
-# NOTE: Strip the apk
 
 import gc
 import sys
@@ -185,7 +184,7 @@ class WordJam(App):
 
     @kivy_timing
     def event_keyboard(self, _, key: int, *largs) -> None:
-        if key == 27 and IS_MOBILE:
+        if key == 27 and IS_MOBILE and not WordButton.lock:
             App.get_running_app().stop()
 
 
