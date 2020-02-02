@@ -67,7 +67,7 @@ class WordButton(Button):
         EventLoop.window.bind(on_keyboard=self.event_keyboard)
 
     # @kivy_timing -> Slow
-    def level_logic(self):
+    def level_logic(self) -> None:
         if self.text == '0':
             self.disabled = True
             self.text = ''
@@ -195,7 +195,6 @@ def main() -> None:
     # Copy the first level as current level if no save slot is found
     if not os.path.exists(LVL + 'save.csv'):
         shutil.copyfile(LVL + '1.csv', LVL + 'save.csv')
-        shutil.copyfile(LVL + '1_hint.csv', LVL + 'save_hint.csv')
     # Load the level
     load_level('save')
     # Fix blurry font because text scalling issue in windows

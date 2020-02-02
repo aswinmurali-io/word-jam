@@ -11,22 +11,17 @@ LEVEL_PROCESSED = False
 
 
 @timing
-def load_level_hint(level):
-    global GRID_HINT
-    with open(LVL + str(level) + '_hint.csv') as csv_file:
-        csv_reader = csv.reader(csv_file, delimiter=',')
-        for row in csv_reader:
-            GRID_HINT += row
-
-
-@timing
 def load_level(level):
-    global GRID, LEVEL_PROCESSED
-    load_level_hint(level)
+    global GRID, LEVEL_PROCESSED, GRID_HINT
     with open(LVL + str(level) + '.csv') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         for row in csv_reader:
-            GRID += row
+            hint_row, one_char_row = [], []
+            for i in range(len(row)):
+                hint_row.append(row[i][1:])
+                one_char_row.append(row[i][0])
+            GRID += one_char_row
+            GRID_HINT += hint_row
         LEVEL_PROCESSED = True
 
 
