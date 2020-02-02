@@ -4,15 +4,12 @@
 # 14 x 18 is the grid with total of 252 grid blocks
 
 import csv
-
 from src.common import GRID, GRID_HINT, LVL, timing
-
-LEVEL_PROCESSED = False
 
 
 @timing
-def load_level(level):
-    global GRID, LEVEL_PROCESSED, GRID_HINT
+def load_level(level: str) -> None:
+    global GRID, GRID_HINT
     with open(LVL + str(level) + '.csv') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         for row in csv_reader:
@@ -22,18 +19,17 @@ def load_level(level):
                 one_char_row.append(row[i][0])
             GRID += one_char_row
             GRID_HINT += hint_row
-        LEVEL_PROCESSED = True
 
 
 @timing
-def validate_character(char, ID):
+def validate_character(char: str, ID: int) -> bool:
     if GRID[int(ID)] == char:
         return True
     return False
 
 
 @timing
-def save_csv(save):
+def save_csv(save: list) -> bool:
     with open(LVL + 'save.csv', 'w', newline='') as csv_file:
         csv_writer = csv.writer(csv_file, delimiter=',')
         csv_writer.writerows(save)
@@ -42,11 +38,11 @@ def save_csv(save):
 
 
 @timing
-def save_level(grid_number, value):
+def save_level(grid_number: int, value: str) -> None:
     global GRID
+    save: list = []
     GRID.clear()
     load_level('save')
-    save = []
     for i in range(len(GRID)):
         save.append(GRID.popleft())
     save[grid_number] = value

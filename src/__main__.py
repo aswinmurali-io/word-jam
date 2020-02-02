@@ -24,7 +24,8 @@ from kivy.uix.widget import Widget
 from kivy.core.window import Window
 
 from src.common import RES, MAX_GRID, DEFAULT_ATLAS, IS_MOBILE, LVL, \
-    GRID_HINT, DEFAULT_STATUS_TEXT, stime, timing, kivy_timing, generate_grid_id
+    GRID_HINT, DEFAULT_STATUS_TEXT, stime, timing, kivy_timing, \
+    generate_grid_id, self_pointer_to_word_jam_class
 
 from src.save import GRID, load_level, validate_character, save_level
 
@@ -50,17 +51,17 @@ Config.write()
 
 
 class WordButton(Button):
-    lock = False
+    lock: bool = False
 
     # @kivy_timing -> Slow
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.opacity = 0
-        self.id = generate_grid_id()
+        self.opacity: float = 0
+        self.id: str = generate_grid_id()
         try:
-            self.text = str(GRID.popleft())
+            self.text: str = str(GRID.popleft())
         except IndexError:
-            self.text = 'X'
+            self.text: str = 'X'
         self.level_logic()
         self.bind(on_press=self.on_click)
         self.fade_effect_ptr = Clock.schedule_interval(self.fade_effect, 0.001)
@@ -77,7 +78,7 @@ class WordButton(Button):
                 self.text = ''
 
     @kivy_timing
-    def on_click(self, *largs):
+    def on_click(self, *largs) -> None:
         if self.text == '' and not self.disabled and not WordButton.lock:
             self.text = '?'
             WordButton.lock = True
@@ -124,7 +125,7 @@ class WordButton(Button):
             Clock.schedule_once(set_status_bar_back_to_default, 5)
 
     # @kivy_timing -> Slow
-    def fade_effect(self, *largs):
+    def fade_effect(self, *largs) -> None:
         if self.opacity < 1:
             self.opacity += 0.1
         # Unregister event after use
