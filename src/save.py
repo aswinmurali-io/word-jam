@@ -4,12 +4,16 @@
 # 14 x 18 is the grid with total of 252 grid blocks
 
 import csv
-from src.common import GRID, GRID_HINT, LVL, timing
+import pickle
+from src.common import GRID, GRID_HINT, LVL, LEVEL_PROGRESS, \
+    LEVEL_TOTAL_PROGRESS, LEVEL_PROGRESS_FILE, COIN_PROGRESS, \
+    COIN_PROGRESS_FILE, LEVEL_PROGRESS_FILE_TOTAL, timing, Logger
 
 
 @timing
 def load_level(level: str) -> None:
-    global GRID, GRID_HINT
+    global GRID, GRID_HINT, LEVEL_TOTAL_PROGRESS
+    LEVEL_TOTAL_PROGRESS = 0
     with open(LVL + str(level) + '.csv') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         for row in csv_reader:
@@ -18,12 +22,23 @@ def load_level(level: str) -> None:
                 hint_row.append(row[i][1:])
                 one_char_row.append(row[i][0])
             GRID += one_char_row
+            for char in one_char_row:
+                if char.islower():
+                    LEVEL_TOTAL_PROGRESS += 1
             GRID_HINT += hint_row
 
 
 @timing
 def validate_character(char: str, ID: int) -> bool:
+    global LEVEL_PROGRESS, COIN_PROGRESS
     if GRID[int(ID)] == char:
+        LEVEL_PROGRESS += 1
+        COIN_PROGRESS += 10 if LEVEL_PROGRESS >= LEVEL_TOTAL_PROGRESS else 0
+        # Save the current progress and total progress in a .save file
+        pickle.dump(LEVEL_PROGRESS, open(LEVEL_PROGRESS_FILE, 'wb'))
+        pickle.dump(COIN_PROGRESS, open(COIN_PROGRESS_FILE, 'wb'))
+        pickle.dump(LEVEL_TOTAL_PROGRESS, open(LEVEL_PROGRESS_FILE_TOTAL, 'wb'))
+        Logger.info('Lvl Progress : ' + str(LEVEL_PROGRESS) + ' / ' + str(LEVEL_TOTAL_PROGRESS))
         return True
     return False
 

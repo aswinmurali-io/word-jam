@@ -11,6 +11,7 @@ import gc
 import sys
 import kivy
 import shutil
+import pickle
 import ctypes
 import os.path
 import datetime
@@ -24,8 +25,8 @@ from kivy.uix.widget import Widget
 from kivy.core.window import Window
 
 from src.common import RES, MAX_GRID, DEFAULT_ATLAS, IS_MOBILE, LVL, \
-    GRID_HINT, DEFAULT_STATUS_TEXT, stime, timing, kivy_timing, \
-    generate_grid_id, self_pointer_to_word_jam_class
+    GRID_HINT, DEFAULT_STATUS_TEXT, COIN_PROGRESS_FILE, COIN_PROGRESS, stime, \
+    timing, kivy_timing, generate_grid_id, self_pointer_to_word_jam_class
 
 from src.save import GRID, load_level, validate_character, save_level
 
@@ -160,15 +161,18 @@ class WordJam(App):
         gc.collect()
         return True
 
-    @kivy_timing
+    # @kivy_timing -> thread
     def async_time(self, *largs) -> None:
-        global stime
+        global stime, COIN_PROGRESS
         stime = (
             datetime.datetime.strptime(
                 stime, '%H:%M:%S'
             ) + datetime.timedelta(seconds=1)
         ).strftime('%H:%M:%S')
         self.root.ids.time.text = '[b]' + stime + '[/b]'
+        with open(COIN_PROGRESS_FILE, 'rb') as pickle_file:
+            COIN_PROGRESS = pickle.load(pickle_file)
+        self.root.ids.coins.text = str(COIN_PROGRESS)
 
     @kivy_timing
     def async_grid(self, *largs) -> bool:

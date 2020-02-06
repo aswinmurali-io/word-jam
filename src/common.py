@@ -4,6 +4,7 @@
 import os
 import sys
 import time
+import pickle
 import functools
 
 from colorama import init, Fore, Style
@@ -27,12 +28,28 @@ DEFAULT_ATLAS: str = 'atlas://data/images/defaulttheme/button'
 DEFAULT_STATUS_TEXT: str = 'Made by [b]AshBlade[/b]'
 self_pointer_to_word_jam_class = None        # The kivy app class self in the form a pointer
 
+LEVEL_PROGRESS: int = 0
+LEVEL_TOTAL_PROGRESS: int = 0
+COIN_PROGRESS: int = 0
+
+LEVEL_PROGRESS_FILE: str = LVL + 'progress.save'
+LEVEL_PROGRESS_FILE_TOTAL: str = LVL + 'progress-total.save'
+COIN_PROGRESS_FILE: str = LVL + 'coin.save'
+
+try:
+    with open(LEVEL_PROGRESS_FILE, 'rb') as pickle_file:
+        LEVEL_PROGRESS = pickle.load(pickle_file)
+    with open(LEVEL_PROGRESS_FILE_TOTAL, 'rb') as pickle_file:
+        LEVEL_TOTAL_PROGRESS = pickle.load(pickle_file)
+except FileNotFoundError:
+    pass
+
 
 def _(**kwargs) -> None:
     pass
 
 
-def generate_grid_id() -> None:
+def generate_grid_id() -> str:
     global GRID_ID
     GRID_ID += 1
     return str(GRID_ID)
