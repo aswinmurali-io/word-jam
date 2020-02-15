@@ -4,10 +4,13 @@
 # 14 x 18 is the grid with total of 252 grid blocks
 
 import csv
+import shutil
 import pickle
+
 from src.common import GRID, GRID_HINT, LVL, LEVEL_PROGRESS, \
     LEVEL_TOTAL_PROGRESS, LEVEL_PROGRESS_FILE, COIN_PROGRESS, \
-    COIN_PROGRESS_FILE, LEVEL_PROGRESS_FILE_TOTAL, timing, Logger
+    COIN_PROGRESS_FILE, LEVEL_PROGRESS_FILE_TOTAL, LEVEL_NUMBER, \
+    LEVEL_NUMBER_FILE, timing, Logger
 
 
 @timing
@@ -30,14 +33,25 @@ def load_level(level: str) -> None:
 
 @timing
 def validate_character(char: str, ID: int) -> bool:
-    global LEVEL_PROGRESS, COIN_PROGRESS
+    global LEVEL_PROGRESS, COIN_PROGRESS, LEVEL_NUMBER, LEVEL_TOTAL_PROGRESS
     if GRID[int(ID)] == char:
+        print(True)
         LEVEL_PROGRESS += 1
-        COIN_PROGRESS += 10 if LEVEL_PROGRESS >= LEVEL_TOTAL_PROGRESS else 0
+        if LEVEL_PROGRESS >= LEVEL_TOTAL_PROGRESS:
+            COIN_PROGRESS += 10
+            LEVEL_NUMBER += 1
+            try:
+                shutil.copyfile(LVL + str(LEVEL_NUMBER) + '.csv', LVL + 'save.csv')
+            except FileNotFoundError:
+                Logger.warn('Lvl Not Found: ' + str(LEVEL_NUMBER) + '.csv unable to load')
+            load_level('save')
+            LEVEL_PROGRESS = 0
+            LEVEL_TOTAL_PROGRESS = 0
         # Save the current progress and total progress in a .save file
         pickle.dump(LEVEL_PROGRESS, open(LEVEL_PROGRESS_FILE, 'wb'))
         pickle.dump(COIN_PROGRESS, open(COIN_PROGRESS_FILE, 'wb'))
         pickle.dump(LEVEL_TOTAL_PROGRESS, open(LEVEL_PROGRESS_FILE_TOTAL, 'wb'))
+        pickle.dump(LEVEL_NUMBER, open(LEVEL_NUMBER_FILE, 'wb'))
         Logger.info('Lvl Progress : ' + str(LEVEL_PROGRESS) + ' / ' + str(LEVEL_TOTAL_PROGRESS))
         return True
     return False

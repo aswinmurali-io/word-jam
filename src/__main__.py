@@ -26,7 +26,8 @@ from kivy.core.window import Window
 
 from src.common import RES, MAX_GRID, DEFAULT_ATLAS, IS_MOBILE, LVL, \
     GRID_HINT, DEFAULT_STATUS_TEXT, COIN_PROGRESS_FILE, COIN_PROGRESS, stime, \
-    timing, kivy_timing, generate_grid_id, self_pointer_to_word_jam_class
+    timing, kivy_timing, generate_grid_id, self_pointer_to_word_jam_class, \
+    LEVEL_NUMBER
 
 from src.save import GRID, load_level, validate_character, save_level
 
@@ -170,8 +171,9 @@ class WordJam(App):
             ) + datetime.timedelta(seconds=1)
         ).strftime('%H:%M:%S')
         self.root.ids.time.text = '[b]' + stime + '[/b]'
-        with open(COIN_PROGRESS_FILE, 'rb') as pickle_file:
-            COIN_PROGRESS = pickle.load(pickle_file)
+        if os.path.exists(COIN_PROGRESS_FILE):
+            with open(COIN_PROGRESS_FILE, 'rb') as pickle_file:
+                COIN_PROGRESS = pickle.load(pickle_file)
         self.root.ids.coins.text = str(COIN_PROGRESS)
 
     @kivy_timing

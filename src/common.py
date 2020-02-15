@@ -7,12 +7,14 @@ import time
 import pickle
 import functools
 
-from colorama import init, Fore, Style
 from collections import deque
+from colorama import init, Fore, Style
 
 from kivy.logger import Logger
 
 init(autoreset=True)
+
+# Game global constant definitions
 
 GRID_ID: int = -1
 GRID: deque = deque()                        # The grid deque where all the level information is stored
@@ -28,21 +30,29 @@ DEFAULT_ATLAS: str = 'atlas://data/images/defaulttheme/button'
 DEFAULT_STATUS_TEXT: str = 'Made by [b]AshBlade[/b]'
 self_pointer_to_word_jam_class = None        # The kivy app class self in the form a pointer
 
+# The level progress variables
+
+LEVEL_NUMBER: int = 0
 LEVEL_PROGRESS: int = 0
 LEVEL_TOTAL_PROGRESS: int = 0
 COIN_PROGRESS: int = 0
 
+# The level progress is stored in a file these variables contain the file name
+
+LEVEL_NUMBER_FILE: str = LVL + 'level.save'
 LEVEL_PROGRESS_FILE: str = LVL + 'progress.save'
 LEVEL_PROGRESS_FILE_TOTAL: str = LVL + 'progress-total.save'
 COIN_PROGRESS_FILE: str = LVL + 'coin.save'
 
-try:
+# Load the level progress variable from the save states
+
+if os.path.exists(LEVEL_PROGRESS_FILE):
     with open(LEVEL_PROGRESS_FILE, 'rb') as pickle_file:
         LEVEL_PROGRESS = pickle.load(pickle_file)
     with open(LEVEL_PROGRESS_FILE_TOTAL, 'rb') as pickle_file:
         LEVEL_TOTAL_PROGRESS = pickle.load(pickle_file)
-except FileNotFoundError:
-    pass
+    with open(LEVEL_NUMBER_FILE, 'rb') as pickle_file:
+        LEVEL_NUMBER = pickle.load(pickle_file)
 
 
 def _(**kwargs) -> None:
