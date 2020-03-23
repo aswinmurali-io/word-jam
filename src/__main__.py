@@ -33,18 +33,24 @@ from src.common import (
     GRID_HINT,
     DEFAULT_STATUS_TEXT,
     COIN_PROGRESS_FILE,
+    LEVEL_NUMBER_FILE,
     COIN_PROGRESS,
     stime,
     timing,
     kivy_timing,
     generate_grid_id,
+    reset_grid_id,
     self_pointer_to_word_jam_class,
+    increment_level,
     LEVEL_NUMBER,
-    LEVEL_PROGRESS,
-    LEVEL_TOTAL_PROGRESS
 )
 
-from src.save import GRID, load_level, validate_character, save_level
+from src.save import (
+    GRID,
+    load_level,
+    validate_character,
+    save_level
+)
 
 kivy.require("1.11.1")
 Window.set_title("Word Jam")
@@ -113,11 +119,18 @@ class WordButton(Button):
 
     # @kivy_timing -> Slow
     def event_keyboard(self, _, key: int, *largs):
+        # global LEVEL_NUMBER
         if self.text == "?":
             # NOTE: Reload the level data again to check validation This needs
             # to be done because while building the grid all the elements are
             # popped out. Thus the GRID deque was empty.
-            load_level(LEVEL_NUMBER)
+            try:
+                with open(LEVEL_NUMBER_FILE, 'rb') as pickle_file:
+                    load_level(pickle.load(pickle_file))
+            except:
+                
+                load_level(LEVEL_NUMBER)
+            # load_level('save')
             WordButton.lock = False
 
             # set the grid block to it's orignal form
@@ -198,15 +211,22 @@ class WordJam(App):
             with open(COIN_PROGRESS_FILE, "rb") as pickle_file:
                 COIN_PROGRESS = pickle.load(pickle_file)
         self.root.ids.coins.text = str(COIN_PROGRESS)
-        print(LEVEL_NUMBER)
-        # if LEVEL_PROGRESS >= LEVEL_TOTAL_PROGRESS:
-        #    Clock.schedule_once(self.async_grid)
-        # Window.set_title(str(LEVEL_NUMBER))
-        # Clock.schedule_once(self.async_grid)
-        # self_pointer_to_word_jam_class.root.ids.grid.do_layout()
+        if os.path.exists('flag'):
+            increment_level()
+            if os.path.exists(LEVEL_NUMBER_FILE):
+                with open(LEVEL_NUMBER_FILE, 'rb') as pickle_file:
+                    load_level(pickle.load(pickle_file))
+            else:
+                load_level(LEVEL_NUMBER)
+            Clock.schedule_once(self.async_grid)
+            os.remove('flag')
 
     @kivy_timing
     def async_grid(self, *largs) -> bool:
+        reset_grid_id()
+        Clock.schedule_once(lambda x: increment_level())
+        
+        Clock.schedule_once(lambda x: self.root.ids.grid.clear_widgets())
         # Generate the grid using custom button widget in loop
         for i in range(MAX_GRID):
             # Schedule in clock to make it faster (lazy loading)

@@ -43,6 +43,14 @@ LEVEL_NUMBER_FILE: str = LVL + 'level.save'
 LEVEL_PROGRESS_FILE: str = LVL + 'progress.save'
 COIN_PROGRESS_FILE: str = LVL + 'coin.save'
 
+try:
+    os.remove(LVL + 'save.csv')
+    os.remove(LVL + 'coin.save')
+    os.remove(LVL + 'progress.save')
+    os.remove(LVL + 'level.save')
+except:
+    pass
+
 # Load the level progress variable from the save states
 
 if os.path.exists(LEVEL_PROGRESS_FILE):
@@ -62,6 +70,16 @@ def generate_grid_id() -> str:
     global GRID_ID
     GRID_ID += 1
     return str(GRID_ID)
+
+
+def reset_grid_id() -> None:
+    global GRID_ID
+    GRID_ID = -1
+
+
+def increment_level():
+    global LEVEL_NUMBER
+    LEVEL_NUMBER += 1
 
 
 # This function is used to measure the time take by different functions

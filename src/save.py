@@ -27,6 +27,7 @@ from src.common import (
 def load_level(number) -> None:
     global GRID, GRID_HINT, LEVEL_TOTAL_PROGRESS
     LEVEL_TOTAL_PROGRESS = 0
+    print(number)
     with open(LVL + str(number) + ".csv") as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=",")
         for row in csv_reader:
@@ -57,7 +58,8 @@ def validate_character(char: str, ID: int) -> bool:
                 Logger.warn(
                     "Lvl Not Found: " + str(LEVEL_NUMBER) + ".csv unable to load"
                 )
-            load_level("save")
+            # load_level("save")
+            open('flag', 'w').write("0")
             Logger.info(
                 "Lvl Progress : Next Level loaded " + str(LEVEL_NUMBER) + ".csv"
             )
@@ -76,8 +78,8 @@ def validate_character(char: str, ID: int) -> bool:
 
 @timing
 def save_csv(save: list) -> bool:
-    with open(LVL + "save.csv", "w", newline="") as csv_file:
-        csv_writer = csv.writer(csv_file, delimiter=",")
+    with open(LVL + "save.csv", 'w', newline='') as csv_file:
+        csv_writer = csv.writer(csv_file, delimiter=',')
         csv_writer.writerows(save)
         return True
     return False
