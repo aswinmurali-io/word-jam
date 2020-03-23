@@ -15,50 +15,38 @@ from kivy.logger import Logger
 init(autoreset=True)
 
 # Game global constant definitions
-
 GRID_ID: int = -1
-GRID: deque = deque()                        # The grid deque where all the level information is stored
+GRID: deque = deque()  # The grid deque where all the level information is stored
 GRID_HINT: list = []
-MAX_GRID: int = 280                          # The maximum grid to store, used to change difficulty of level
-PATH: str = os.getcwd()                      # The master path of the project
-LVL: str = PATH + '/lvl/'                    # The folder where the levels are stored (.csv format)
-RES: str = PATH + '/res/'                    # The folder where the resources are stored
-FONT_COLOR: tuple = (0.5, 0.5, 0.5, 1)       # The font color of the game
-IS_MOBILE: bool = True if 'android' in sys.modules else False  # mobile detection
-stime: str = '00:00:00'                      # The level time counter
-DEFAULT_ATLAS: str = 'atlas://data/images/defaulttheme/button'
-DEFAULT_STATUS_TEXT: str = 'Made by [b]AshBlade[/b]'
-self_pointer_to_word_jam_class = None        # The kivy app class self in the form a pointer
+MAX_GRID: int = 280  # The maximum grid to store, used to change difficulty of level
+PATH: str = os.getcwd()  # The master path of the project
+LVL: str = PATH + "/lvl/"  # The folder where the levels are stored (.csv format)
+RES: str = PATH + "/res/"  # The folder where the resources are stored
+FONT_COLOR: tuple = (0.5, 0.5, 0.5, 1)  # The font color of the game
+IS_MOBILE: bool = True if "android" in sys.modules else False  # mobile detection
+stime: str = "00:00:00"  # The level time counter
+DEFAULT_ATLAS: str = "atlas://data/images/defaulttheme/button"
+DEFAULT_STATUS_TEXT: str = "Made by [b]AshBlade[/b]"
+self_pointer_to_word_jam_class = None  # The kivy app class self in the form a pointer
 
 # The level progress variables
-
 LEVEL_NUMBER: int = 1
 LEVEL_PROGRESS: int = 0
 LEVEL_TOTAL_PROGRESS: int = 1
 COIN_PROGRESS: int = 0
 
 # The level progress is stored in a file these variables contain the file name
-
-LEVEL_NUMBER_FILE: str = LVL + 'level.save'
-LEVEL_PROGRESS_FILE: str = LVL + 'progress.save'
-COIN_PROGRESS_FILE: str = LVL + 'coin.save'
-
-try:
-    os.remove(LVL + 'save.csv')
-    os.remove(LVL + 'coin.save')
-    os.remove(LVL + 'progress.save')
-    os.remove(LVL + 'level.save')
-except:
-    pass
+LEVEL_NUMBER_FILE: str = LVL + "level.save"
+LEVEL_PROGRESS_FILE: str = LVL + "progress.save"
+COIN_PROGRESS_FILE: str = LVL + "coin.save"
 
 # Load the level progress variable from the save states
-
 if os.path.exists(LEVEL_PROGRESS_FILE):
-    with open(LEVEL_PROGRESS_FILE, 'rb') as pickle_file:
+    with open(LEVEL_PROGRESS_FILE, "rb") as pickle_file:
         LEVEL_PROGRESS = pickle.load(pickle_file)
-    with open(COIN_PROGRESS_FILE, 'rb') as pickle_file:
+    with open(COIN_PROGRESS_FILE, "rb") as pickle_file:
         COIN_PROGRESS = pickle.load(pickle_file)
-    with open(LEVEL_NUMBER_FILE, 'rb') as pickle_file:
+    with open(LEVEL_NUMBER_FILE, "rb") as pickle_file:
         LEVEL_NUMBER = pickle.load(pickle_file)
 
 
@@ -67,19 +55,23 @@ def _(**kwargs) -> None:
 
 
 def generate_grid_id() -> str:
+    """
+    This function will return a grid id for each grid widget in the grid
+    layout. The reason for using this function is to minimise scope issue in
+    GRID_ID variable
+    """
     global GRID_ID
     GRID_ID += 1
     return str(GRID_ID)
 
 
 def reset_grid_id() -> None:
+    """
+    This function will reset the grid id so that a new level can be loaded.
+    The reason for using this function is to minimise scope issue in GRID_ID
+    """
     global GRID_ID
     GRID_ID = -1
-
-
-def increment_level():
-    global LEVEL_NUMBER
-    LEVEL_NUMBER += 1
 
 
 # This function is used to measure the time take by different functions
@@ -90,8 +82,22 @@ def timing(f):
         time1 = time.time()
         ret = f(*args)
         time2 = time.time()
-        Logger.debug(Style.DIM + 'Speed: function ' + Fore.CYAN + Style.NORMAL + f.__name__ + '() ' + Style.DIM + ' -> ' + Fore.RED + str((time2-time1) * 1000.0) + 'ms' + Fore.RESET)
+        Logger.debug(
+            Style.DIM
+            + "Speed: function "
+            + Fore.CYAN
+            + Style.NORMAL
+            + f.__name__
+            + "() "
+            + Style.DIM
+            + " -> "
+            + Fore.RED
+            + str((time2 - time1) * 1000.0)
+            + "ms"
+            + Fore.RESET
+        )
         return ret
+
     return wrap
 
 
@@ -102,5 +108,19 @@ def kivy_timing(func):
         startTime = time.time()
         func(*args, **kwargs)
         elapsedTime = time.time() - startTime
-        Logger.debug(Style.DIM + 'Speed: function ' + Fore.CYAN + Style.NORMAL + func.__name__ + '() ' + Style.DIM + ' -> ' + Fore.RED + str(round(elapsedTime * 1000)) + 'ms' + Fore.RESET)
+        Logger.debug(
+            Style.DIM
+            + "Speed: function "
+            + Fore.CYAN
+            + Style.NORMAL
+            + func.__name__
+            + "() "
+            + Style.DIM
+            + " -> "
+            + Fore.RED
+            + str(round(elapsedTime * 1000))
+            + "ms"
+            + Fore.RESET
+        )
+
     return newfunc

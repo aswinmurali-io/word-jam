@@ -41,7 +41,6 @@ from src.common import (
     generate_grid_id,
     reset_grid_id,
     self_pointer_to_word_jam_class,
-    increment_level,
     LEVEL_NUMBER,
 )
 
@@ -128,7 +127,6 @@ class WordButton(Button):
                 with open(LEVEL_NUMBER_FILE, 'rb') as pickle_file:
                     load_level(pickle.load(pickle_file))
             except:
-                
                 load_level(LEVEL_NUMBER)
             # load_level('save')
             WordButton.lock = False
@@ -202,30 +200,43 @@ class WordJam(App):
     # @kivy_timing -> thread
     def async_time(self, *largs) -> None:
         global stime, COIN_PROGRESS
+        # setting the time
         stime = (
             datetime.datetime.strptime(stime, "%H:%M:%S")
             + datetime.timedelta(seconds=1)
         ).strftime("%H:%M:%S")
         self.root.ids.time.text = "[b]" + stime + "[/b]"
+        # Load the coins from the coin save file
         if os.path.exists(COIN_PROGRESS_FILE):
             with open(COIN_PROGRESS_FILE, "rb") as pickle_file:
                 COIN_PROGRESS = pickle.load(pickle_file)
+        # Set the coin progress in action bar
         self.root.ids.coins.text = str(COIN_PROGRESS)
+        # Load the deque with the next level grid info.
+
+        # NOTE: The LEVEL_NUMBER variable is not updating properly
+        # may be because of scope issue therefore the level progress
+        # save file is used instead to get the next level number.
         if os.path.exists('flag'):
-            increment_level()
+            # increment_level()
             if os.path.exists(LEVEL_NUMBER_FILE):
                 with open(LEVEL_NUMBER_FILE, 'rb') as pickle_file:
                     load_level(pickle.load(pickle_file))
             else:
                 load_level(LEVEL_NUMBER)
+            # Request redrawing of the grid layout
             Clock.schedule_once(self.async_grid)
+            # NOTE: A flag file was created to notify the main script when the
+            # next level is required. The main script has no proper scope with
+            # the variables like LEVEL_NUMBER, LEVEL_PROGRESS etc. So we used
+            # file as a message. Now we delete the file
             os.remove('flag')
 
     @kivy_timing
     def async_grid(self, *largs) -> bool:
+        # Reset the grid id to freshly start the deque GRID for next level
         reset_grid_id()
-        Clock.schedule_once(lambda x: increment_level())
-        
+        # Clean the previous level grids for new once. Must be in clock
         Clock.schedule_once(lambda x: self.root.ids.grid.clear_widgets())
         # Generate the grid using custom button widget in loop
         for i in range(MAX_GRID):

@@ -40,8 +40,6 @@ def load_level(number) -> None:
                 if char.islower():
                     LEVEL_TOTAL_PROGRESS += 1
             GRID_HINT += hint_row
-    if LEVEL_NUMBER > 1:
-        LEVEL_TOTAL_PROGRESS -= 1
 
 
 @timing
@@ -58,8 +56,11 @@ def validate_character(char: str, ID: int) -> bool:
                 Logger.warn(
                     "Lvl Not Found: " + str(LEVEL_NUMBER) + ".csv unable to load"
                 )
-            # load_level("save")
-            open('flag', 'w').write("0")
+            # NOTE: There is some scope issue with the LEVEL_NUMBER and other
+            # variable therefore to tell the main script that the level is
+            # completed we will create a file which will act as message so the
+            # UI thread can display the next level
+            open("flag", "w").write("0")
             Logger.info(
                 "Lvl Progress : Next Level loaded " + str(LEVEL_NUMBER) + ".csv"
             )
@@ -78,8 +79,8 @@ def validate_character(char: str, ID: int) -> bool:
 
 @timing
 def save_csv(save: list) -> bool:
-    with open(LVL + "save.csv", 'w', newline='') as csv_file:
-        csv_writer = csv.writer(csv_file, delimiter=',')
+    with open(LVL + "save.csv", "w", newline="") as csv_file:
+        csv_writer = csv.writer(csv_file, delimiter=",")
         csv_writer.writerows(save)
         return True
     return False
