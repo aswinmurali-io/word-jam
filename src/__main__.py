@@ -24,30 +24,45 @@ from kivy.uix.button import Button
 from kivy.uix.widget import Widget
 from kivy.core.window import Window
 
-from src.common import RES, MAX_GRID, DEFAULT_ATLAS, IS_MOBILE, LVL, \
-    GRID_HINT, DEFAULT_STATUS_TEXT, COIN_PROGRESS_FILE, COIN_PROGRESS, stime, \
-    timing, kivy_timing, generate_grid_id, self_pointer_to_word_jam_class, \
-    LEVEL_NUMBER
+from src.common import (
+    RES,
+    MAX_GRID,
+    DEFAULT_ATLAS,
+    IS_MOBILE,
+    LVL,
+    GRID_HINT,
+    DEFAULT_STATUS_TEXT,
+    COIN_PROGRESS_FILE,
+    COIN_PROGRESS,
+    stime,
+    timing,
+    kivy_timing,
+    generate_grid_id,
+    self_pointer_to_word_jam_class,
+    LEVEL_NUMBER,
+    LEVEL_PROGRESS,
+    LEVEL_TOTAL_PROGRESS
+)
 
 from src.save import GRID, load_level, validate_character, save_level
 
-kivy.require('1.11.1')
+kivy.require("1.11.1")
 Window.set_title("Word Jam")
 
 # Setting up the configuration of the game
 
-Config.set('kivy', 'log_maxfiles', 10)
-Config.set('kivy', 'log_level', 'debug')
-Config.set('kivy', 'exit_on_escape', False)
-Config.set('kivy', 'pause_on_minimize', False)
-Config.set('kivy', 'allow_screensaver', False)
-Config.set('kivy', 'window_icon', RES + 'win.png')
+Config.set("kivy", "log_maxfiles", 10)
+Config.set("kivy", "log_level", "debug")
+Config.set("kivy", "exit_on_escape", False)
+Config.set("kivy", "pause_on_minimize", False)
+Config.set("kivy", "allow_screensaver", False)
+Config.set("kivy", "window_icon", RES + "win.png")
 
-Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
+Config.set("input", "mouse", "mouse,multitouch_on_demand")
 
-Config.set('graphics', 'width', 580)
-Config.set('graphics', 'height', 850)
-Config.set('graphics', 'resizable', False)
+Config.set("graphics", "width", 580)
+Config.set("graphics", "height", 850)
+Config.set("graphics", "resizable", False)
 
 Config.write()
 
@@ -63,7 +78,7 @@ class WordButton(Button):
         try:
             self.text: str = str(GRID.popleft())
         except IndexError:
-            self.text: str = 'X'
+            self.text: str = "X"
         self.level_logic()
         self.bind(on_press=self.on_click)
         self.fade_effect_ptr = Clock.schedule_interval(self.fade_effect, 0.001)
@@ -71,31 +86,38 @@ class WordButton(Button):
 
     # @kivy_timing -> Slow
     def level_logic(self) -> None:
-        if self.text == '0':
+        if self.text == "0":
             self.disabled = True
-            self.text = ''
+            self.text = ""
         else:
             self.disabled = False
             if self.text.islower():
-                self.text = ''
+                self.text = ""
 
     @kivy_timing
     def on_click(self, *largs) -> None:
-        if self.text == '' and not self.disabled and not WordButton.lock:
-            self.text = '?'
+        if self.text == "" and not self.disabled and not WordButton.lock:
+            self.text = "?"
             WordButton.lock = True
-            self.background_normal = ''
+            self.background_normal = ""
             self.background_color = 0, 1, 1, 1
-            self_pointer_to_word_jam_class.root.ids.status_bar.text = ("Press [b]ESC[/b] to cancel selection" if not IS_MOBILE else "Press [b]any[/b] letter to cancel selection") \
-                + ((', [b]hint[/b]: ' + GRID_HINT[int(self.id)][1:-1]) if GRID_HINT[int(self.id)][1:-1] != '' else '')
+            self_pointer_to_word_jam_class.root.ids.status_bar.text = (
+                "Press [b]ESC[/b] to cancel selection"
+                if not IS_MOBILE
+                else "Press [b]any[/b] letter to cancel selection"
+            ) + (
+                (", [b]hint[/b]: " + GRID_HINT[int(self.id)][1:-1])
+                if GRID_HINT[int(self.id)][1:-1] != ""
+                else ""
+            )
 
     # @kivy_timing -> Slow
     def event_keyboard(self, _, key: int, *largs):
-        if self.text == '?':
+        if self.text == "?":
             # NOTE: Reload the level data again to check validation This needs
             # to be done because while building the grid all the elements are
             # popped out. Thus the GRID deque was empty.
-            load_level(1)
+            load_level(LEVEL_NUMBER)
             WordButton.lock = False
 
             # set the grid block to it's orignal form
@@ -104,11 +126,13 @@ class WordButton(Button):
                 self.background_color = 1, 1, 1, 1
 
             def not_correct_letter(*largs):
-                self.text = ''
+                self.text = ""
                 set_grid_block_to_default(None)
 
             def set_status_bar_back_to_default(*largs):
-                self_pointer_to_word_jam_class.root.ids.status_bar.text = DEFAULT_STATUS_TEXT
+                self_pointer_to_word_jam_class.root.ids.status_bar.text = (
+                    DEFAULT_STATUS_TEXT
+                )
 
             # Android Back button or Esc key
             if key == 27:
@@ -119,7 +143,7 @@ class WordButton(Button):
                 save_level(int(self.id), chr(key).upper())
                 Clock.schedule_once(set_grid_block_to_default, 1)
             else:
-                self.text = 'X'
+                self.text = "X"
                 self.background_normal = DEFAULT_ATLAS
                 self.background_color = 1, 0, 0, 1
                 Clock.schedule_once(not_correct_letter, 1)
@@ -166,22 +190,29 @@ class WordJam(App):
     def async_time(self, *largs) -> None:
         global stime, COIN_PROGRESS
         stime = (
-            datetime.datetime.strptime(
-                stime, '%H:%M:%S'
-            ) + datetime.timedelta(seconds=1)
-        ).strftime('%H:%M:%S')
-        self.root.ids.time.text = '[b]' + stime + '[/b]'
+            datetime.datetime.strptime(stime, "%H:%M:%S")
+            + datetime.timedelta(seconds=1)
+        ).strftime("%H:%M:%S")
+        self.root.ids.time.text = "[b]" + stime + "[/b]"
         if os.path.exists(COIN_PROGRESS_FILE):
-            with open(COIN_PROGRESS_FILE, 'rb') as pickle_file:
+            with open(COIN_PROGRESS_FILE, "rb") as pickle_file:
                 COIN_PROGRESS = pickle.load(pickle_file)
         self.root.ids.coins.text = str(COIN_PROGRESS)
+        print(LEVEL_NUMBER)
+        # if LEVEL_PROGRESS >= LEVEL_TOTAL_PROGRESS:
+        #    Clock.schedule_once(self.async_grid)
+        # Window.set_title(str(LEVEL_NUMBER))
+        # Clock.schedule_once(self.async_grid)
+        # self_pointer_to_word_jam_class.root.ids.grid.do_layout()
 
     @kivy_timing
     def async_grid(self, *largs) -> bool:
         # Generate the grid using custom button widget in loop
         for i in range(MAX_GRID):
             # Schedule in clock to make it faster (lazy loading)
-            Clock.schedule_once(lambda x: self.root.ids.grid.add_widget(WordButton(text=' ')))
+            Clock.schedule_once(
+                lambda x: self.root.ids.grid.add_widget(WordButton(text=" "))
+            )
         return True
 
     @kivy_timing
@@ -200,12 +231,12 @@ def main() -> None:
     # For this game, disabling is necessary
     gc.disable()
     # Copy the first level as current level if no save slot is found
-    if not os.path.exists(LVL + 'save.csv'):
-        shutil.copyfile(LVL + '1.csv', LVL + 'save.csv')
+    if not os.path.exists(LVL + "save.csv"):
+        shutil.copyfile(LVL + "1.csv", LVL + "save.csv")
     # Load the level
-    load_level('save')
+    load_level("save")
     # Fix blurry font because text scalling issue in windows
-    if 'win32' in sys.platform:
+    if "win32" in sys.platform:
         ctypes.windll.shcore.SetProcessDpiAwareness(1)
     # UI entry point
     WordJam().run()
