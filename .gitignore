@@ -7,8 +7,10 @@ bin/
 
 # Project garbage files
 logs/
+
+# Project save files
 save.csv
-*.save
+save.db
 
 # vscode personal settings
 .vscode/
@@ -49,7 +51,6 @@ MANIFEST
 #  Usually these files are written by a python script from a template
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
-# *.spec
 
 # Installer logs
 pip-log.txt

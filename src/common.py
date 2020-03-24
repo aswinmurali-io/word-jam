@@ -5,6 +5,7 @@ import os
 import sys
 import time
 import pickle
+import sqlite3
 import functools
 
 from collections import deque
@@ -22,6 +23,7 @@ MAX_GRID: int = 280  # The maximum grid to store, used to change difficulty of l
 PATH: str = os.getcwd()  # The master path of the project
 LVL: str = PATH + "/lvl/"  # The folder where the levels are stored (.csv format)
 RES: str = PATH + "/res/"  # The folder where the resources are stored
+SRC: str = PATH + "/src/"
 FONT_COLOR: tuple = (0.5, 0.5, 0.5, 1)  # The font color of the game
 IS_MOBILE: bool = True if "android" in sys.modules else False  # mobile detection
 stime: str = "00:00:00"  # The level time counter
@@ -40,14 +42,57 @@ LEVEL_NUMBER_FILE: str = LVL + "level.save"
 LEVEL_PROGRESS_FILE: str = LVL + "progress.save"
 COIN_PROGRESS_FILE: str = LVL + "coin.save"
 
-# Load the level progress variable from the save states
-if os.path.exists(LEVEL_PROGRESS_FILE):
-    with open(LEVEL_PROGRESS_FILE, "rb") as pickle_file:
-        LEVEL_PROGRESS = pickle.load(pickle_file)
-    with open(COIN_PROGRESS_FILE, "rb") as pickle_file:
-        COIN_PROGRESS = pickle.load(pickle_file)
-    with open(LEVEL_NUMBER_FILE, "rb") as pickle_file:
-        LEVEL_NUMBER = pickle.load(pickle_file)
+DB_CONNECTION: sqlite3.Connection = sqlite3.connect(LVL + "save.db")
+DB_CONNECTION.isolation_level = None
+db: sqlite3.Cursor = DB_CONNECTION.cursor()
+
+try:
+    for row in db.execute("select * from saves;"):
+        print(row)
+except sqlite3.OperationalError:
+    db.executescript(open(SRC + "setup.sql").read())
+    db.execute("insert into saves values(0, 1, 0);")
+    DB_CONNECTION.commit()
+
+db.execute("select * from saves;")
+COIN_PROGRESS, LEVEL_NUMBER, LEVEL_PROGRESS = db.fetchone()
+print(COIN_PROGRESS, LEVEL_NUMBER, LEVEL_PROGRESS)
+for row in db.execute("select * from level_history;"):
+    print(row)
+
+
+def save(COIN_PROGRESS=None, LEVEL_NUMBER=None, LEVEL_PROGRESS=None) -> None:
+    if COIN_PROGRESS is not None:
+        db.execute("update saves set coins=?", (str(COIN_PROGRESS),))
+    elif LEVEL_NUMBER is not None:
+        db.execute("update saves set level_number=?", (str(LEVEL_NUMBER),))
+    elif LEVEL_PROGRESS is not None:
+        db.execute("update saves set level_progress=?", (str(LEVEL_PROGRESS),))
+    return True
+
+
+# NOTE: Remember that get is a singleton function, i.e, it will get you only
+# one save variable at a time
+def get(
+    COIN_PROGRESS: bool = False,
+    LEVEL_NUMBER: bool = False,
+    LEVEL_PROGRESS: bool = False,
+) -> int:
+    db.execute("select * from saves;")
+    x = db.fetchone()
+    if COIN_PROGRESS:
+        return x[0]
+    elif LEVEL_NUMBER:
+        return x[1]
+    elif LEVEL_PROGRESS:
+        return x[2]
+    return -1
+
+
+# Load the save data into the variables
+COIN_PROGRESS = get(COIN_PROGRESS=True)
+LEVEL_PROGRESS = get(LEVEL_PROGRESS=True)
+LEVEL_NUMBER = get(LEVEL_NUMBER=True)
 
 
 def _(**kwargs) -> None:

@@ -1,0 +1,16 @@
+"""
+# Load the level progress variable from the save states
+if os.path.exists(LEVEL_PROGRESS_FILE):
+    with open(LEVEL_PROGRESS_FILE, "rb") as pickle_file:
+        LEVEL_PROGRESS = pickle.load(pickle_file)
+    with open(COIN_PROGRESS_FILE, "rb") as pickle_file:
+        COIN_PROGRESS = pickle.load(pickle_file)
+    with open(LEVEL_NUMBER_FILE, "rb") as pickle_file:
+        LEVEL_NUMBER = pickle.load(pickle_file)
+"""
+
+        """
+        pickle.dump(LEVEL_PROGRESS, open(LEVEL_PROGRESS_FILE, "wb"))
+        # pickle.dump(LEVEL_PROGRESS, open(LEVEL_PROGRESS_FILE, 'wb'))
+        pickle.dump(COIN_PROGRESS, open(COIN_PROGRESS_FILE, "wb"))
+        pickle.dump(LEVEL_NUMBER, open(LEVEL_NUMBER_FILE, "wb"))"""

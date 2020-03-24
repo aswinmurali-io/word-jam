@@ -9,6 +9,8 @@ import pickle
 
 from src.common import (
     GRID,
+    save,
+    get,
     GRID_HINT,
     LVL,
     LEVEL_PROGRESS,
@@ -49,30 +51,25 @@ def validate_character(char: str, ID: int) -> bool:
         LEVEL_PROGRESS += 1
         if LEVEL_PROGRESS >= LEVEL_TOTAL_PROGRESS:
             COIN_PROGRESS += 10
+            save(COIN_PROGRESS=COIN_PROGRESS)
             LEVEL_NUMBER += 1
             try:
                 shutil.copyfile(LVL + str(LEVEL_NUMBER) + ".csv", LVL + "save.csv")
             except FileNotFoundError:
-                Logger.warn(
-                    "Lvl Not Found: " + str(LEVEL_NUMBER) + ".csv unable to load"
-                )
+                Logger.warn("Lvl Not Found: " + str(LEVEL_NUMBER) + ".csv unable to load")
             # NOTE: There is some scope issue with the LEVEL_NUMBER and other
             # variable therefore to tell the main script that the level is
             # completed we will create a file which will act as message so the
             # UI thread can display the next level
             open("flag", "w").write("0")
-            Logger.info(
-                "Lvl Progress : Next Level loaded " + str(LEVEL_NUMBER) + ".csv"
-            )
+            Logger.info("Lvl Progress : Next Level loaded " + str(LEVEL_NUMBER) + ".csv")
             LEVEL_PROGRESS = 0
+
         # Save the current progress and total progress in a .save file
-        pickle.dump(LEVEL_PROGRESS, open(LEVEL_PROGRESS_FILE, "wb"))
-        # pickle.dump(LEVEL_PROGRESS, open(LEVEL_PROGRESS_FILE, 'wb'))
-        pickle.dump(COIN_PROGRESS, open(COIN_PROGRESS_FILE, "wb"))
-        pickle.dump(LEVEL_NUMBER, open(LEVEL_NUMBER_FILE, "wb"))
-        Logger.info(
-            "Lvl Progress : " + str(LEVEL_PROGRESS) + " / " + str(LEVEL_TOTAL_PROGRESS)
-        )
+        save(LEVEL_PROGRESS=LEVEL_PROGRESS)
+        save(COIN_PROGRESS=COIN_PROGRESS)
+        save(LEVEL_NUMBER=LEVEL_NUMBER)
+        Logger.info("Lvl Progress : " + str(LEVEL_PROGRESS) + " / " + str(LEVEL_TOTAL_PROGRESS))
         return True
     return False
 

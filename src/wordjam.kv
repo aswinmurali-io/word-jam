@@ -1,6 +1,8 @@
 # The UI definitions of the game is here
 
 #:import com src.common
+#:import Popup kivy.uix.popup.Popup
+#:import Label kivy.uix.label.Label
 #:import Window kivy.core.window.Window
 
 <MainLayout>:
@@ -25,12 +27,29 @@
             size_hint_y: 0.1
             orientation: 'horizontal'
 
+            BoxLayout:
+
+                pos: self.pos
+                size: self.size
+                padding: 10
+                size_hint_x: 2
+                orientation: 'horizontal'
+
+                Button:
+                    text: "LEVELS"
+                    size_hint_y: 0.6
+
+                Button:
+                    text: "ABOUT"
+                    size_hint_y: 0.6
+                    on_touch_down: Popup(title='About', content=Label(text='Word Jam is a crossword game which you can play\nduring your free time. Made using python with the\nhelp of kivy python package. Made by Aswin Murali,\nthe project is hosted online in github\nhttps://github.com/aswinmurali-io/word-jam'), size_hint=(None, None), size=(400, 400)).open()
+
             BoxLayout:  # Coin Display
 
                 pos: self.pos
                 size: self.size
                 padding: 10
-                size_hint_x: 0.8
+                size_hint_x: 0.9
                 orientation: 'horizontal'
 
                 Image:
@@ -59,7 +78,7 @@
                 padding: 10
                 pos: self.pos
                 size: self.size
-                size_hint_x: 0.7
+                size_hint_x: 0.9
                 orientation: 'horizontal'
 
                 Image:
