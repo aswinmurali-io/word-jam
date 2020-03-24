@@ -3,17 +3,9 @@
 
 import os
 import sys
-import time
-import pickle
 import sqlite3
-import functools
 
 from collections import deque
-from colorama import init, Fore, Style
-
-from kivy.logger import Logger
-
-init(autoreset=True)
 
 # Game global constant definitions
 GRID_ID: int = -1
@@ -23,7 +15,7 @@ MAX_GRID: int = 280  # The maximum grid to store, used to change difficulty of l
 PATH: str = os.getcwd()  # The master path of the project
 LVL: str = PATH + "/lvl/"  # The folder where the levels are stored (.csv format)
 RES: str = PATH + "/res/"  # The folder where the resources are stored
-SRC: str = PATH + "/src/"
+SRC: str = PATH + "/src/" # The folder where the source code is located
 FONT_COLOR: tuple = (0.5, 0.5, 0.5, 1)  # The font color of the game
 IS_MOBILE: bool = True if "android" in sys.modules else False  # mobile detection
 stime: str = "00:00:00"  # The level time counter
@@ -37,30 +29,30 @@ LEVEL_PROGRESS: int = 0
 LEVEL_TOTAL_PROGRESS: int = 1
 COIN_PROGRESS: int = 0
 
-# The level progress is stored in a file these variables contain the file name
-LEVEL_NUMBER_FILE: str = LVL + "level.save"
-LEVEL_PROGRESS_FILE: str = LVL + "progress.save"
-COIN_PROGRESS_FILE: str = LVL + "coin.save"
-
 DB_CONNECTION: sqlite3.Connection = sqlite3.connect(LVL + "save.db")
 DB_CONNECTION.isolation_level = None
 db: sqlite3.Cursor = DB_CONNECTION.cursor()
 
+# Setup the SQL database for storing the game save data
+# the save data table creation is present in setup.sql file
 try:
     for row in db.execute("select * from saves;"):
-        print(row)
+        pass
 except sqlite3.OperationalError:
     db.executescript(open(SRC + "setup.sql").read())
+    # Init the table with a value of zero but the middle
+    # one with 1 because level starts from 1
     db.execute("insert into saves values(0, 1, 0);")
     DB_CONNECTION.commit()
 
+# Load the game save data and store it in the game variables
 db.execute("select * from saves;")
 COIN_PROGRESS, LEVEL_NUMBER, LEVEL_PROGRESS = db.fetchone()
-print(COIN_PROGRESS, LEVEL_NUMBER, LEVEL_PROGRESS)
 for row in db.execute("select * from level_history;"):
-    print(row)
+    pass
 
 
+# @kivy_timing -> Do not use as it breaks the function logic
 def save(COIN_PROGRESS=None, LEVEL_NUMBER=None, LEVEL_PROGRESS=None) -> None:
     if COIN_PROGRESS is not None:
         db.execute("update saves set coins=?", (str(COIN_PROGRESS),))
@@ -73,6 +65,7 @@ def save(COIN_PROGRESS=None, LEVEL_NUMBER=None, LEVEL_PROGRESS=None) -> None:
 
 # NOTE: Remember that get is a singleton function, i.e, it will get you only
 # one save variable at a time
+# @kivy_timing -> Do not use as it breaks the function logic
 def get(
     COIN_PROGRESS: bool = False,
     LEVEL_NUMBER: bool = False,
@@ -117,55 +110,3 @@ def reset_grid_id() -> None:
     """
     global GRID_ID
     GRID_ID = -1
-
-
-# This function is used to measure the time take by different functions
-# both timing and timeit do the same thing but different ways.
-# timing -> does not work with kivy
-def timing(f):
-    def wrap(*args):
-        time1 = time.time()
-        ret = f(*args)
-        time2 = time.time()
-        Logger.debug(
-            Style.DIM
-            + "Speed: function "
-            + Fore.CYAN
-            + Style.NORMAL
-            + f.__name__
-            + "() "
-            + Style.DIM
-            + " -> "
-            + Fore.RED
-            + str((time2 - time1) * 1000.0)
-            + "ms"
-            + Fore.RESET
-        )
-        return ret
-
-    return wrap
-
-
-# kivy_timing -> works with kivy
-def kivy_timing(func):
-    @functools.wraps(func)
-    def newfunc(*args, **kwargs):
-        startTime = time.time()
-        func(*args, **kwargs)
-        elapsedTime = time.time() - startTime
-        Logger.debug(
-            Style.DIM
-            + "Speed: function "
-            + Fore.CYAN
-            + Style.NORMAL
-            + func.__name__
-            + "() "
-            + Style.DIM
-            + " -> "
-            + Fore.RED
-            + str(round(elapsedTime * 1000))
-            + "ms"
-            + Fore.RESET
-        )
-
-    return newfunc

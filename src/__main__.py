@@ -11,9 +11,7 @@ import gc
 import sys
 import kivy
 import shutil
-import pickle
 import ctypes
-import sqlite3
 import os.path
 import datetime
 
@@ -25,27 +23,22 @@ from kivy.uix.button import Button
 from kivy.uix.widget import Widget
 from kivy.core.window import Window
 
+from src.monitor import timing, kivy_timing
+
 from src.common import (
     RES,
     MAX_GRID,
     DEFAULT_ATLAS,
     get,
-    save,
     IS_MOBILE,
     LVL,
     GRID_HINT,
     DEFAULT_STATUS_TEXT,
-    COIN_PROGRESS_FILE,
-    LEVEL_NUMBER_FILE,
-    COIN_PROGRESS,
     DB_CONNECTION,
     stime,
-    timing,
-    kivy_timing,
     generate_grid_id,
     reset_grid_id,
-    self_pointer_to_word_jam_class,
-    LEVEL_NUMBER,
+    self_pointer_to_word_jam_class
 )
 
 from src.save import (
@@ -61,7 +54,7 @@ Window.set_title("Word Jam")
 # Setting up the configuration of the game
 
 Config.set("kivy", "log_maxfiles", 10)
-Config.set("kivy", "log_level", "debug")
+Config.set("kivy", "log_level", "critical")
 Config.set("kivy", "exit_on_escape", False)
 Config.set("kivy", "pause_on_minimize", False)
 Config.set("kivy", "allow_screensaver", False)
@@ -122,18 +115,11 @@ class WordButton(Button):
 
     # @kivy_timing -> Slow
     def event_keyboard(self, _, key: int, *largs):
-        # global LEVEL_NUMBER
         if self.text == "?":
             # NOTE: Reload the level data again to check validation This needs
             # to be done because while building the grid all the elements are
             # popped out. Thus the GRID deque was empty.
-            """try:
-                with open(LEVEL_NUMBER_FILE, 'rb') as pickle_file:
-                    load_level(pickle.load(pickle_file))
-            except:
-                load_level(LEVEL_NUMBER)"""
             load_level(get(LEVEL_NUMBER=True))
-            # load_level('save')
             WordButton.lock = False
 
             # set the grid block to it's orignal form
@@ -205,7 +191,6 @@ class WordJam(App):
     # @kivy_timing -> thread
     def async_time(self, *largs) -> None:
         global stime
-        """, COIN_PROGRESS"""
         # setting the time
         stime = (
             datetime.datetime.strptime(stime, "%H:%M:%S")
@@ -213,9 +198,6 @@ class WordJam(App):
         ).strftime("%H:%M:%S")
         self.root.ids.time.text = "[b]" + stime + "[/b]"
         # Load the coins from the coin save file
-        """if os.path.exists(COIN_PROGRESS_FILE):
-            with open(COIN_PROGRESS_FILE, "rb") as pickle_file:
-                COIN_PROGRESS = pickle.load(pickle_file)"""
         # Set the coin progress in action bar
         self.root.ids.coins.text = str(get(COIN_PROGRESS=True))
         # Load the deque with the next level grid info.
@@ -224,14 +206,7 @@ class WordJam(App):
         # may be because of scope issue therefore the level progress
         # save file is used instead to get the next level number.
         if os.path.exists('flag'):
-            # increment_level()
-            """
-            if os.path.exists(LEVEL_NUMBER_FILE):
-                with open(LEVEL_NUMBER_FILE, 'rb') as pickle_file:
-                    load_level(pickle.load(pickle_file))"""
             load_level(get(LEVEL_NUMBER=True))
-            #else:
-            #    load_level(LEVEL_NUMBER)
             # Request redrawing of the grid layout
             Clock.schedule_once(self.async_grid)
             # NOTE: A flag file was created to notify the main script when the

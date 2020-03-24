@@ -5,23 +5,19 @@
 
 import csv
 import shutil
-import pickle
+
+from kivy.logger import Logger
+from src.monitor import timing
 
 from src.common import (
     GRID,
     save,
-    get,
     GRID_HINT,
     LVL,
     LEVEL_PROGRESS,
     LEVEL_TOTAL_PROGRESS,
-    LEVEL_PROGRESS_FILE,
     COIN_PROGRESS,
-    COIN_PROGRESS_FILE,
     LEVEL_NUMBER,
-    LEVEL_NUMBER_FILE,
-    timing,
-    Logger,
 )
 
 
@@ -29,7 +25,6 @@ from src.common import (
 def load_level(number) -> None:
     global GRID, GRID_HINT, LEVEL_TOTAL_PROGRESS
     LEVEL_TOTAL_PROGRESS = 0
-    print(number)
     with open(LVL + str(number) + ".csv") as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=",")
         for row in csv_reader:
@@ -64,7 +59,6 @@ def validate_character(char: str, ID: int) -> bool:
             open("flag", "w").write("0")
             Logger.info("Lvl Progress : Next Level loaded " + str(LEVEL_NUMBER) + ".csv")
             LEVEL_PROGRESS = 0
-
         # Save the current progress and total progress in a .save file
         save(LEVEL_PROGRESS=LEVEL_PROGRESS)
         save(COIN_PROGRESS=COIN_PROGRESS)
