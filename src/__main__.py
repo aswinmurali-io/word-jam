@@ -1,5 +1,6 @@
 # !/usr/bin/python
 # The main game code
+# adb -d logcat *:S python:D
 
 # BUG: The pause on minimize feature seems to take too much cpu during idle
 # NOTE: The loading of the grid uses kivy clock, not multi-threading (fix it)
@@ -7,7 +8,6 @@
 # NOTE: Clock.schedule_once(self.remove_load_logo, 2) -> set to 1 when building
 # NOTE: import os; os.environ["KIVY_NO_CONSOLELOG"] = '1' use this before build
 
-import gc
 import sys
 import kivy
 import shutil
@@ -27,6 +27,7 @@ from src.monitor import timing, kivy_timing
 
 from src.common import (
     RES,
+    SRC,
     LVL,
     MAX_GRID,
     IS_MOBILE,
@@ -168,14 +169,15 @@ class WordJam(App):
         # dynamic approach and therefore should be handled carefully
         global self_pointer_to_word_jam_class
         self_pointer_to_word_jam_class = self
-
-        return Builder.load_file("layout.kv")
+        return Builder.load_file(SRC + "layout.kv")
 
     @timing
     def on_start(self) -> None:
         # Start the grid constructor if in main layout
         if self.root.current in 'main':
             Clock.schedule_once(self.async_grid)
+            # Removing the banner logo after use
+            Clock.schedule_once(lambda x: self.root.ids.main.ids.content.remove_widget(self.root.ids.main.ids.load), 1)
         # Start the timer event function
         Clock.schedule_interval(self.async_time, 1)
         # Bind android back button to exit
@@ -183,7 +185,6 @@ class WordJam(App):
 
     @timing
     def on_pause(self) -> bool:
-        gc.collect()
         return True
 
     # @kivy_timing -> thread
@@ -193,8 +194,6 @@ class WordJam(App):
         stime = (datetime.datetime.strptime(stime, "%H:%M:%S") + datetime.timedelta(seconds=1)).strftime("%H:%M:%S")
         # Detecting if it's Main Layout and applying code logic for it
         if self.root.current in 'main':
-            # Removing the banner logo after use
-            Clock.schedule_once(lambda x: self.root.ids.main.ids.content.remove_widget(self.root.ids.main.ids.load), 1)
             # Update the time in the UI
             self.root.ids.main.ids.time.text = "[b]" + stime + "[/b]"
             # Load the coins from the save file and set the coin progress in UI
@@ -237,8 +236,6 @@ class WordJam(App):
 
 @kivy_timing
 def main() -> None:
-    # For this game, disabling is necessary
-    gc.disable()
     # Copy the first level as current level if no save slot is found
     if not os.path.exists(LVL + "save.csv"):
         shutil.copyfile(LVL + "1.csv", LVL + "save.csv")

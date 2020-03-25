@@ -33,7 +33,8 @@ To preview the project in desktop. Use the `poetry run` command to execute the
 project. Make sure you have followed the installation section first.
 
 ```shell
-    $ poetry run python -m src
+    $ start http://localhost:5000/
+    $ poetry run python -m src -m webdebugger
 ```
 
 This will run the src module of the project which contains all the source code

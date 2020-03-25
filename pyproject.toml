@@ -20,6 +20,7 @@ kivy = "^1.11.1"
 pyinstaller = "^3.6"
 colorama = "^0.4.3"
 mypy = "^0.761"
+flask = "^1.1.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^4.6"
