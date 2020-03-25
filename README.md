@@ -27,7 +27,7 @@ Refer [Buildozer Installation Docs](https://buildozer.readthedocs.io/en/latest/i
 
 ### Desktop
 
-> Delete the .kivy folder to do proper preview. Otherwise your previous configuration for other projects might affect this games
+> Delete the .kivy folder to do proper preview. Otherwise your previous configuration of other projects might affect this games
 
 To preview the project in desktop. Use the `poetry run` command to execute the
 project. Make sure you have followed the installation section first.
@@ -56,7 +56,7 @@ This will take a lot of time to complete.
 ### Desktop
 
 To build the project we will be using `pyinstaller` package inside `poetry` virtual env.
-The build instructions are specified in `main.spec` for desktop
+The build instructions are specified in `pyinstaller.spec` for desktop
 
 > Delete the .kivy folder to do proper build. Otherwise your previous configuration for other projects might affect this games
 
@@ -73,4 +73,4 @@ to do type checking. To check error type the following command
     $ poetry run mypy --package src --ignore-missing-imports
 ```
 
-> There will be some errors. Things that are dynamically loaded will not be recognised and therefore show error
+> There may or may not be errors found. Things that are dynamically loaded will not be recognised and therefore show error
