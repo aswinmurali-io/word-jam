@@ -67,6 +67,7 @@ Config.set("graphics", "resizable", False)
 Config.write()
 
 stime: str = "00:00:00"  # The level time counter
+self_pointer_to_word_jam_class: App = None
 
 
 class WordButton(Button):
@@ -75,12 +76,10 @@ class WordButton(Button):
     # @kivy_timing -> Slow
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.opacity: float = 0
+        self.opacity: float = 0.0
         self.id: str = generate_grid_id()
-        try:
-            self.text: str = str(GRID.popleft())
-        except IndexError:
-            self.text: str = "X"
+        self.disabled: bool = True
+        self.text: str = str(GRID.popleft()) if len(GRID) >= 0 else "X"
         self.level_logic()
         self.bind(on_press=self.on_click)
         self.fade_effect_ptr = Clock.schedule_interval(self.fade_effect, 0.001)
@@ -89,7 +88,6 @@ class WordButton(Button):
     # @kivy_timing -> Slow
     def level_logic(self) -> None:
         if self.text == "0":
-            self.disabled = True
             self.text = ""
         else:
             self.disabled = False
@@ -97,7 +95,7 @@ class WordButton(Button):
                 self.text = ""
 
     @kivy_timing
-    def on_click(self, *largs) -> None:
+    def on_click(self, *_) -> None:
         if self.text == "" and not self.disabled and not WordButton.lock:
             self.text = "?"
             WordButton.lock = True
@@ -105,7 +103,7 @@ class WordButton(Button):
             self.background_color = 0, 1, 1, 1
 
             # TODO: ugly code line below. Make it neat later
-            self_pointer_to_word_jam_class.root.ids.status_bar.text = (
+            self_pointer_to_word_jam_class.root.ids.main.ids.status_bar.text = (
                 "Press [b]ESC[/b] to cancel selection"
                 if not IS_MOBILE
                 else "Press [b]any[/b] letter to cancel selection"
@@ -116,7 +114,7 @@ class WordButton(Button):
             )
 
     # @kivy_timing -> Slow
-    def event_keyboard(self, _, key: int, *largs):
+    def event_keyboard(self, __, key: int, *_):
         if self.text == "?":
             # NOTE: Reload the level data again to check validation This needs
             # to be done because while building the grid all the elements are
@@ -124,17 +122,17 @@ class WordButton(Button):
             load_level(get(LEVEL_NUMBER=True))
             WordButton.lock = False
 
-            # set the grid block to it's orignal form
-            def set_grid_block_to_default(*largs):
+            # set the grid block to it's original form
+            def set_grid_block_to_default(*_):
                 self.background_normal = DEFAULT_ATLAS
                 self.background_color = 1, 1, 1, 1
 
-            def not_correct_letter(*largs):
+            def not_correct_letter(*_):
                 self.text = ""
                 set_grid_block_to_default(None)
 
-            def set_status_bar_back_to_default(*largs):
-                self_pointer_to_word_jam_class.root.ids.status_bar.text = DEFAULT_STATUS_TEXT
+            def set_status_bar_back_to_default(*_):
+                self_pointer_to_word_jam_class.root.ids.main.ids.status_bar.text = DEFAULT_STATUS_TEXT
 
             # Android Back button or Esc key
             if key == 27:
@@ -153,7 +151,7 @@ class WordButton(Button):
             Clock.schedule_once(set_status_bar_back_to_default, 5)
 
     # @kivy_timing -> Slow
-    def fade_effect(self, *largs) -> None:
+    def fade_effect(self, *_) -> None:
         if self.opacity < 1:
             self.opacity += 0.1
         # Unregister event after use
@@ -189,9 +187,9 @@ class WordJam(App):
         return True
 
     # @kivy_timing -> thread
-    def async_time(self, *largs) -> None:
+    def async_time(self, *_) -> None:
         global stime
-        # upating the time by one second
+        # updating the time by one second
         stime = (datetime.datetime.strptime(stime, "%H:%M:%S") + datetime.timedelta(seconds=1)).strftime("%H:%M:%S")
         # Detecting if it's Main Layout and applying code logic for it
         if self.root.current in 'main':
@@ -218,7 +216,7 @@ class WordJam(App):
             os.remove('flag')
 
     @kivy_timing
-    def async_grid(self, *largs) -> bool:
+    def async_grid(self, *_) -> bool:
         # Reset the grid id to freshly start the deque GRID for next level
         reset_grid_id()
         # if self.root.current in 'main':
@@ -232,7 +230,7 @@ class WordJam(App):
 
     # Exit handler for android and other mobile devices
     @kivy_timing
-    def event_keyboard(self, _, key: int, *largs) -> None:
+    def event_keyboard(self, __, key: int, *_) -> None:
         if key == 27 and IS_MOBILE and not WordButton.lock:
             App.get_running_app().stop()
 
@@ -246,7 +244,7 @@ def main() -> None:
         shutil.copyfile(LVL + "1.csv", LVL + "save.csv")
     # Load the level
     load_level("save")
-    # Fix blurry font because text scalling issue in windows
+    # Fix blurry font because text scale issue in windows
     if "win32" in sys.platform:
         ctypes.windll.shcore.SetProcessDpiAwareness(1)
     # UI entry point

@@ -40,9 +40,9 @@ def load_level(number) -> None:
 
 
 @timing
-def validate_character(char: str, ID: int) -> bool:
+def validate_character(char: str, grid_id: int) -> bool:
     global LEVEL_PROGRESS, COIN_PROGRESS, LEVEL_NUMBER, LEVEL_TOTAL_PROGRESS
-    if GRID[int(ID)] == char:
+    if GRID[int(grid_id)] == char:
         LEVEL_PROGRESS += 1
         if LEVEL_PROGRESS >= LEVEL_TOTAL_PROGRESS:
             COIN_PROGRESS += 10
@@ -69,21 +69,20 @@ def validate_character(char: str, ID: int) -> bool:
 
 
 @timing
-def save_csv(save: list) -> bool:
+def save_csv(save_list: list) -> bool:
     with open(LVL + "save.csv", "w", newline="") as csv_file:
-        csv_writer = csv.writer(csv_file, delimiter=",")
-        csv_writer.writerows(save)
+        csv_writer = csv.writer(csv_file, delimiter=',')
+        csv_writer.writerows(save_list)
         return True
-    return False
 
 
 @timing
 def save_level(grid_number: int, value: str) -> None:
     global GRID
-    save: list = []
+    save_tmp: list = []
     GRID.clear()
     load_level("save")
     for i in range(len(GRID)):
-        save.append(GRID.popleft())
-    save[grid_number] = value
-    save_csv(save)
+        save_tmp.append(GRID.popleft())
+    save_tmp[grid_number] = value
+    save_csv(save_tmp)

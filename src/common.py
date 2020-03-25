@@ -15,7 +15,7 @@ MAX_GRID: int = 280  # The maximum grid to store, used to change difficulty of l
 PATH: str = os.getcwd()  # The master path of the project
 LVL: str = PATH + "/lvl/"  # The folder where the levels are stored (.csv format)
 RES: str = PATH + "/res/"  # The folder where the resources are stored
-SRC: str = PATH + "/src/" # The folder where the source code is located
+SRC: str = PATH + "/src/"  # The folder where the source code is located
 FONT_COLOR: tuple = (0.5, 0.5, 0.5, 1)  # The font color of the game
 IS_MOBILE: bool = True if "android" in sys.modules else False  # mobile detection
 DEFAULT_ATLAS: str = "atlas://data/images/defaulttheme/button"
@@ -51,7 +51,7 @@ for row in db.execute("select * from level_history;"):
 
 
 # @kivy_timing -> Do not use as it breaks the function logic
-def save(COIN_PROGRESS=None, LEVEL_NUMBER=None, LEVEL_PROGRESS=None) -> None:
+def save(COIN_PROGRESS=None, LEVEL_NUMBER=None, LEVEL_PROGRESS=None) -> bool:
     if COIN_PROGRESS is not None:
         db.execute("update saves set coins=?", (str(COIN_PROGRESS),))
     elif LEVEL_NUMBER is not None:
@@ -86,7 +86,7 @@ LEVEL_PROGRESS = get(LEVEL_PROGRESS=True)
 LEVEL_NUMBER = get(LEVEL_NUMBER=True)
 
 
-def _(**kwargs) -> None:
+def _(**_) -> None:
     pass
 
 
