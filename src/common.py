@@ -18,10 +18,8 @@ RES: str = PATH + "/res/"  # The folder where the resources are stored
 SRC: str = PATH + "/src/" # The folder where the source code is located
 FONT_COLOR: tuple = (0.5, 0.5, 0.5, 1)  # The font color of the game
 IS_MOBILE: bool = True if "android" in sys.modules else False  # mobile detection
-stime: str = "00:00:00"  # The level time counter
 DEFAULT_ATLAS: str = "atlas://data/images/defaulttheme/button"
 DEFAULT_STATUS_TEXT: str = "Made by [b]AshBlade[/b]"
-self_pointer_to_word_jam_class = None  # The kivy app class self in the form a pointer
 
 # The level progress variables
 LEVEL_NUMBER: int = 1

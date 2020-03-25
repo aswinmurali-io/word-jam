@@ -8,6 +8,7 @@ bin/
 # Project garbage files
 logs/
 snippet
+.idea/
 
 # Project save files
 save.csv

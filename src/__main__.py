@@ -17,35 +17,33 @@ import datetime
 
 from kivy.app import App
 from kivy.clock import Clock
+from kivy.lang import Builder
 from kivy.config import Config
 from kivy.base import EventLoop
 from kivy.uix.button import Button
-from kivy.uix.widget import Widget
 from kivy.core.window import Window
 
 from src.monitor import timing, kivy_timing
 
 from src.common import (
     RES,
-    MAX_GRID,
-    DEFAULT_ATLAS,
-    get,
-    IS_MOBILE,
     LVL,
+    MAX_GRID,
+    IS_MOBILE,
     GRID_HINT,
-    DEFAULT_STATUS_TEXT,
+    DEFAULT_ATLAS,
     DB_CONNECTION,
-    stime,
-    generate_grid_id,
+    DEFAULT_STATUS_TEXT,
+    get,
     reset_grid_id,
-    self_pointer_to_word_jam_class
+    generate_grid_id
 )
 
 from src.save import (
     GRID,
     load_level,
-    validate_character,
-    save_level
+    save_level,
+    validate_character
 )
 
 kivy.require("1.11.1")
@@ -54,7 +52,7 @@ Window.set_title("Word Jam")
 # Setting up the configuration of the game
 
 Config.set("kivy", "log_maxfiles", 10)
-Config.set("kivy", "log_level", "critical")
+Config.set("kivy", "log_level", "debug")
 Config.set("kivy", "exit_on_escape", False)
 Config.set("kivy", "pause_on_minimize", False)
 Config.set("kivy", "allow_screensaver", False)
@@ -67,6 +65,8 @@ Config.set("graphics", "height", 850)
 Config.set("graphics", "resizable", False)
 
 Config.write()
+
+stime: str = "00:00:00"  # The level time counter
 
 
 class WordButton(Button):
@@ -103,6 +103,8 @@ class WordButton(Button):
             WordButton.lock = True
             self.background_normal = ""
             self.background_color = 0, 1, 1, 1
+
+            # TODO: ugly code line below. Make it neat later
             self_pointer_to_word_jam_class.root.ids.status_bar.text = (
                 "Press [b]ESC[/b] to cancel selection"
                 if not IS_MOBILE
@@ -132,9 +134,7 @@ class WordButton(Button):
                 set_grid_block_to_default(None)
 
             def set_status_bar_back_to_default(*largs):
-                self_pointer_to_word_jam_class.root.ids.status_bar.text = (
-                    DEFAULT_STATUS_TEXT
-                )
+                self_pointer_to_word_jam_class.root.ids.status_bar.text = DEFAULT_STATUS_TEXT
 
             # Android Back button or Esc key
             if key == 27:
@@ -161,24 +161,24 @@ class WordButton(Button):
             Clock.unschedule(self.fade_effect_ptr)
 
 
-class MainLayout(Widget):
-    pass
-
-
 class WordJam(App):
     @timing
-    def build(self) -> MainLayout:
+    def build(self):
+        # This is a global class pointer approach where the self of a class is
+        # stored in a different global variable so that the class can be
+        # accessed from everywhere within the file. Remember as this is a very
+        # dynamic approach and therefore should be handled carefully
         global self_pointer_to_word_jam_class
         self_pointer_to_word_jam_class = self
-        return MainLayout()
+
+        return Builder.load_file("layout.kv")
 
     @timing
     def on_start(self) -> None:
-        # Start the grid constructor
-        Clock.schedule_once(self.async_grid)
-        # Remove the banner logo after use
-        Clock.schedule_once(self.remove_load_logo, 1)
-        # Start the level timer
+        # Start the grid constructor if in main layout
+        if self.root.current in 'main':
+            Clock.schedule_once(self.async_grid)
+        # Start the timer event function
         Clock.schedule_interval(self.async_time, 1)
         # Bind android back button to exit
         EventLoop.window.bind(on_keyboard=self.event_keyboard)
@@ -191,49 +191,46 @@ class WordJam(App):
     # @kivy_timing -> thread
     def async_time(self, *largs) -> None:
         global stime
-        # setting the time
-        stime = (
-            datetime.datetime.strptime(stime, "%H:%M:%S")
-            + datetime.timedelta(seconds=1)
-        ).strftime("%H:%M:%S")
-        self.root.ids.time.text = "[b]" + stime + "[/b]"
-        # Load the coins from the coin save file
-        # Set the coin progress in action bar
-        self.root.ids.coins.text = str(get(COIN_PROGRESS=True))
-        # Load the deque with the next level grid info.
+        # upating the time by one second
+        stime = (datetime.datetime.strptime(stime, "%H:%M:%S") + datetime.timedelta(seconds=1)).strftime("%H:%M:%S")
+        # Detecting if it's Main Layout and applying code logic for it
+        if self.root.current in 'main':
+            # Removing the banner logo after use
+            Clock.schedule_once(lambda x: self.root.ids.main.ids.content.remove_widget(self.root.ids.main.ids.load), 1)
+            # Update the time in the UI
+            self.root.ids.main.ids.time.text = "[b]" + stime + "[/b]"
+            # Load the coins from the save file and set the coin progress in UI
+            self.root.ids.main.ids.coins.text = str(get(COIN_PROGRESS=True))
 
         # NOTE: The LEVEL_NUMBER variable is not updating properly
         # may be because of scope issue therefore the level progress
         # save file is used instead to get the next level number.
+        # TODO: Find a better approach later for this logic
         if os.path.exists('flag'):
+            # Load the deque with the next level grid info.
             load_level(get(LEVEL_NUMBER=True))
             # Request redrawing of the grid layout
             Clock.schedule_once(self.async_grid)
             # NOTE: A flag file was created to notify the main script when the
             # next level is required. The main script has no proper scope with
             # the variables like LEVEL_NUMBER, LEVEL_PROGRESS etc. So we used
-            # file as a message. Now we delete the file
+            # file as a message. Now we delete the file after use
             os.remove('flag')
 
     @kivy_timing
     def async_grid(self, *largs) -> bool:
         # Reset the grid id to freshly start the deque GRID for next level
         reset_grid_id()
+        # if self.root.current in 'main':
         # Clean the previous level grids for new once. Must be in clock
-        Clock.schedule_once(lambda x: self.root.ids.grid.clear_widgets())
+        Clock.schedule_once(lambda x: self.root.ids.main.ids.grid.clear_widgets())
         # Generate the grid using custom button widget in loop
         for i in range(MAX_GRID):
             # Schedule in clock to make it faster (lazy loading)
-            Clock.schedule_once(
-                lambda x: self.root.ids.grid.add_widget(WordButton(text=" "))
-            )
+            Clock.schedule_once(lambda x: self.root.ids.main.ids.grid.add_widget(WordButton(text=" ")))
         return True
 
-    @kivy_timing
-    def remove_load_logo(self, *largs) -> None:
-        # Delete loading txt after use
-        self.root.ids.content.remove_widget(self.root.ids.load)
-
+    # Exit handler for android and other mobile devices
     @kivy_timing
     def event_keyboard(self, _, key: int, *largs) -> None:
         if key == 27 and IS_MOBILE and not WordButton.lock:
@@ -254,9 +251,9 @@ def main() -> None:
         ctypes.windll.shcore.SetProcessDpiAwareness(1)
     # UI entry point
     WordJam().run()
+    # Close the database after game if closed
     DB_CONNECTION.close()
 
 
 # Entry point
-if __name__ == "__main__":
-    main()
+main() if __name__ == "__main__" else None

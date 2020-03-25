@@ -1,12 +1,17 @@
 # The UI definitions of the game is here
-
 #:import com src.common
-#:import Popup kivy.uix.popup.Popup
-#:import Label kivy.uix.label.Label
 #:import Window kivy.core.window.Window
 
-<MainLayout>:
+# The ids were important to access each layout's widget. Also the name and id of the widget must be same
+# Layout definitions
+ScreenManager:
+    MainLayout:
+        id: main
+    LevelList:
+        id: level
 
+<MainLayout@Screen>:
+    name: "main"
     # Setting up white background for the layout
     canvas.before:
 
@@ -36,13 +41,10 @@
                 orientation: 'horizontal'
 
                 Button:
+                    id: level_list
                     text: "LEVELS"
                     size_hint_y: 0.6
-
-                Button:
-                    text: "ABOUT"
-                    size_hint_y: 0.6
-                    on_touch_down: Popup(title='About', content=Label(text='Word Jam is a crossword game which you can play\nduring your free time. Made using python with the\nhelp of kivy python package. Made by Aswin Murali,\nthe project is hosted online in github\nhttps://github.com/aswinmurali-io/word-jam'), size_hint=(None, None), size=(400, 400)).open()
+                    on_release: app.root.current = 'level'
 
             BoxLayout:  # Coin Display
 
@@ -58,7 +60,6 @@
                     anim_loop: 0
                     anim_delay: 0.1
                     size_hint: 0.3, 0.3
-                    # allow_stretch: True
                     source: com.RES + 'coin.gif'
 
                 Label:
@@ -86,7 +87,6 @@
                     pos: self.pos
                     size_hint: 0.3, 0.3
                     pos_hint_y: 1.5
-                    # allow_stretch: True
                     source: com.RES + 'clock.png'
 
                 Label:
@@ -130,3 +130,10 @@
                 color: com.FONT_COLOR
                 text: com.DEFAULT_STATUS_TEXT
                 halign: 'left' if not com.IS_MOBILE else 'center'
+
+<LevelList@Screen>:
+    name: 'level'
+
+    Button:
+        text: "Hi"
+        on_touch_down: app.root.current = 'main'
