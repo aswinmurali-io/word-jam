@@ -12,6 +12,7 @@ from src.monitor import timing
 from src.common import (
     GRID,
     save,
+    save_level_history,
     GRID_HINT,
     LVL,
     LEVEL_PROGRESS,

@@ -40,25 +40,35 @@ except sqlite3.OperationalError:
     db.executescript(open(SRC + "setup.sql").read())
     # Init the table with a value of zero but the middle
     # one with 1 because level starts from 1
-    db.execute("insert into saves values(0, 1, 0);")
+    db.execute("insert into saves values(0, 1, 0, '00:00:00');")
     DB_CONNECTION.commit()
 
 # Load the game save data and store it in the game variables
 db.execute("select * from saves;")
-COIN_PROGRESS, LEVEL_NUMBER, LEVEL_PROGRESS = db.fetchone()
-for row in db.execute("select * from level_history;"):
-    pass
+COIN_PROGRESS, LEVEL_NUMBER, LEVEL_PROGRESS, _ = db.fetchone()
 
 
 # @kivy_timing -> Do not use as it breaks the function logic
-def save(COIN_PROGRESS=None, LEVEL_NUMBER=None, LEVEL_PROGRESS=None) -> bool:
+def save(COIN_PROGRESS: int or None = None, LEVEL_NUMBER: int or None = None,
+         LEVEL_PROGRESS: int or None = None, LEVEL_TIME: str or None = None) -> bool:
     if COIN_PROGRESS is not None:
         db.execute("update saves set coins=?", (str(COIN_PROGRESS),))
     elif LEVEL_NUMBER is not None:
         db.execute("update saves set level_number=?", (str(LEVEL_NUMBER),))
     elif LEVEL_PROGRESS is not None:
         db.execute("update saves set level_progress=?", (str(LEVEL_PROGRESS),))
+    elif LEVEL_TIME is not None:
+        db.execute("update saves set level_time=\"" + LEVEL_TIME + '"')
     return True
+
+
+def save_level_history(level: int, level_time: str, accuracy: float):
+    return db.execute("insert into level_history values(" + str(level) + ',"' + level_time + '",' + str(accuracy) + ')')
+
+
+def get_level_history() -> tuple:
+    db.execute("select * from level_history")
+    return db.fetchall()
 
 
 # NOTE: Remember that get is a singleton function, i.e, it will get you only
@@ -68,7 +78,8 @@ def get(
     COIN_PROGRESS: bool = False,
     LEVEL_NUMBER: bool = False,
     LEVEL_PROGRESS: bool = False,
-) -> int:
+    LEVEL_TIME: bool = False
+) -> int or str:
     db.execute("select * from saves;")
     x = db.fetchone()
     if COIN_PROGRESS:
@@ -77,6 +88,8 @@ def get(
         return x[1]
     elif LEVEL_PROGRESS:
         return x[2]
+    elif LEVEL_TIME:
+        return x[3]
     return -1
 
 

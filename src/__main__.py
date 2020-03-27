@@ -10,6 +10,7 @@
 
 import sys
 import kivy
+import glob
 import shutil
 import ctypes
 import os.path
@@ -18,8 +19,10 @@ import datetime
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.lang import Builder
+from kivy.logger import Logger
 from kivy.config import Config
 from kivy.base import EventLoop
+from kivy.factory import Factory
 from kivy.uix.button import Button
 from kivy.core.window import Window
 
@@ -36,8 +39,11 @@ from src.common import (
     DB_CONNECTION,
     DEFAULT_STATUS_TEXT,
     get,
+    save,
     reset_grid_id,
-    generate_grid_id
+    generate_grid_id,
+    get_level_history,
+    save_level_history
 )
 
 from src.save import (
@@ -53,7 +59,7 @@ Window.set_title("Word Jam")
 # Setting up the configuration of the game
 
 Config.set("kivy", "log_maxfiles", 10)
-Config.set("kivy", "log_level", "debug")
+Config.set("kivy", "log_level", "info")
 Config.set("kivy", "exit_on_escape", False)
 Config.set("kivy", "pause_on_minimize", False)
 Config.set("kivy", "allow_screensaver", False)
@@ -67,7 +73,7 @@ Config.set("graphics", "resizable", False)
 
 Config.write()
 
-stime: str = "00:00:00"  # The level time counter
+stime: str = get(LEVEL_TIME=True)  # The level time counter
 self_pointer_to_word_jam_class: App = None
 
 
@@ -187,25 +193,47 @@ class WordJam(App):
     def on_pause(self) -> bool:
         return True
 
+    @staticmethod
+    @timing
+    def async_lazy_load_level_list(root) -> None:
+        # First we removed the old widgets from the layout to refresh it with
+        # with new widgets as the level list gets updated every time when the
+        # the player wins a level
+        root.ids.level_list_layout.clear_widgets()
+        Logger.info("Lazy Loading: Lazy loading the level list for level list layout")
+        levels: int = len(glob.glob(LVL + '*.csv'))
+        records = get_level_history()
+        for i in range(1, levels):
+            x = Factory.LevelSelectionButton()
+            x.level_number = "Level " + str(i)
+            try:
+                # i - 1 is because we are starting loop i from 1 instead of 0
+                x.level_time = records[i - 1][1]
+            except IndexError:
+                # The current level we need to finish should be in In Progress
+                # status not in Not Completed
+                if i != get(LEVEL_NUMBER=True):
+                    x.level_time = "Not Completed"
+                else:
+                    x.level_time = "In Progress, No Records Found"
+            root.ids.level_list_layout.add_widget(x)
+
     # @kivy_timing -> thread
     def async_time(self, *_) -> None:
         global stime
-        # updating the time by one second
-        stime = (datetime.datetime.strptime(stime, "%H:%M:%S") + datetime.timedelta(seconds=1)).strftime("%H:%M:%S")
-        # Detecting if it's Main Layout and applying code logic for it
-        if self.root.current in 'main':
-            # Update the time in the UI
-            self.root.ids.main.ids.time.text = "[b]" + stime + "[/b]"
-            # Load the coins from the save file and set the coin progress in UI
-            self.root.ids.main.ids.coins.text = str(get(COIN_PROGRESS=True))
-
         # NOTE: The LEVEL_NUMBER variable is not updating properly
         # may be because of scope issue therefore the level progress
         # save file is used instead to get the next level number.
         # TODO: Find a better approach later for this logic
-        if os.path.exists('flag'):
-            # Load the deque with the next level grid info.
-            load_level(get(LEVEL_NUMBER=True))
+        if os.path.exists('flag'):  # -> The next level if condition
+            # Load the deque with the next level grid info
+            x = get(LEVEL_NUMBER=True)
+            load_level(x)
+            # Save the current level time in level history
+            save_level_history(x - 1, stime, 0)
+            # Reset the level timer for the next level
+            stime = '00:00:00'
+            save(LEVEL_TIME=stime)
             # Request redrawing of the grid layout
             Clock.schedule_once(self.async_grid)
             # NOTE: A flag file was created to notify the main script when the
@@ -213,6 +241,17 @@ class WordJam(App):
             # the variables like LEVEL_NUMBER, LEVEL_PROGRESS etc. So we used
             # file as a message. Now we delete the file after use
             os.remove('flag')
+        else:
+            # updating the time by one second
+            stime = (datetime.datetime.strptime(stime, "%H:%M:%S") + datetime.timedelta(seconds=1)).strftime("%H:%M:%S")
+            # Save the current level timer
+            save(LEVEL_TIME=stime)
+        # Detecting if it's Main Layout and applying code logic for it
+        if self.root.current in 'main':
+            # Update the time in the UI
+            self.root.ids.main.ids.time.text = "[b]{stime}[/b]".format(**globals())
+            # Load the coins from the save file and set the coin progress in UI
+            self.root.ids.main.ids.coins.text = str(get(COIN_PROGRESS=True))
 
     @kivy_timing
     def async_grid(self, *_) -> bool:

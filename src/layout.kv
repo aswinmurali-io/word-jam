@@ -1,8 +1,10 @@
 # The UI definitions of the game is here
 #:import com src.common
 #:import Window kivy.core.window.Window
+#:import Factory kivy.factory.Factory
 
-# The ids were important to access each layout's widget. Also the name and id of the widget must be same
+# NOTE: The ids were important to access each layout's widget. Also the name, id of the layout must be same
+
 # Layout definitions
 ScreenManager:
     MainLayout:
@@ -14,7 +16,6 @@ ScreenManager:
     name: "main"
     # Setting up white background for the layout
     canvas.before:
-
         Color:
             rgba: 1, 1, 1, 1
         Rectangle:
@@ -22,18 +23,15 @@ ScreenManager:
             size: self.size
 
     BoxLayout:
-
         size: root.size
         orientation: 'vertical'
         padding: 5 if not com.IS_MOBILE else 30
 
         BoxLayout:
-
             size_hint_y: 0.1
             orientation: 'horizontal'
 
             BoxLayout:
-
                 pos: self.pos
                 size: self.size
                 padding: 10
@@ -47,7 +45,6 @@ ScreenManager:
                     on_release: app.root.current = 'level'
 
             BoxLayout:  # Coin Display
-
                 pos: self.pos
                 size: self.size
                 padding: 10
@@ -55,7 +52,6 @@ ScreenManager:
                 orientation: 'horizontal'
 
                 Image:
-
                     pos_hint_y: 1.5
                     anim_loop: 0
                     anim_delay: 0.1
@@ -63,7 +59,6 @@ ScreenManager:
                     source: com.RES + 'coin.gif'
 
                 Label:
-
                     id: coins
                     text: '[b]0[/b]'
                     color: com.FONT_COLOR
@@ -75,7 +70,6 @@ ScreenManager:
             BoxLayout:  # For some spacing
 
             BoxLayout:  # Time Display
-
                 padding: 10
                 pos: self.pos
                 size: self.size
@@ -83,14 +77,12 @@ ScreenManager:
                 orientation: 'horizontal'
 
                 Image:
-
                     pos: self.pos
                     size_hint: 0.3, 0.3
                     pos_hint_y: 1.5
                     source: com.RES + 'clock.png'
 
                 Label:
-
                     markup: True
                     id: time
                     halign: 'left'
@@ -100,29 +92,24 @@ ScreenManager:
                     text: '[b]00:00:00[/b]'
 
         BoxLayout:  # Content Canvas
-
             id: content
             orientation: 'vertical'
             padding: 15 if not com.IS_MOBILE else 30
             on_touch_down: Window.request_keyboard(com._, self, 'text')
 
             GridLayout:
-
                 id: grid
                 cols: 14
                 rows: 20
 
             Image:
-
                 id: load
                 source: com.RES + 'banner.png'
 
         BoxLayout:  # Status bar
-
             size_hint_y: 0.05
 
             Label:  # The credit text
-
                 id: status_bar
                 markup: True
                 padding: 15, 15
@@ -131,9 +118,74 @@ ScreenManager:
                 text: com.DEFAULT_STATUS_TEXT
                 halign: 'left' if not com.IS_MOBILE else 'center'
 
+
+<LevelSelectionButton@BoxLayout>: # Level Selection Button
+    orientation: 'horizontal'
+    size_hint_y: 0.1
+    level_number: ''
+    level_time: ''
+
+    BoxLayout:
+        orientation: 'vertical'
+
+        Label:
+            color: com.FONT_COLOR
+            halign: 'left'
+            valign: 'center'
+            text: root.level_number
+            text_size: self.size
+
+        Label:
+            color: com.FONT_COLOR
+            halign: 'left'
+            valign: 'top'
+            text: root.level_time
+            text_size: self.size
+
+    Button:
+        size_hint_x: 0.35
+        padding: 0, 30
+        text: "Play"
+        disabled: True  if root.level_time == 'Not Completed' else False
+
 <LevelList@Screen>:
     name: 'level'
 
-    Button:
-        text: "Hi"
-        on_touch_down: app.root.current = 'main'
+    BoxLayout:
+        orientation: 'vertical'
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        BoxLayout: # The difficulty bar
+            size_hint_y: 0.1
+            padding: 15
+            spacing: 10
+            orientation: 'horizontal'
+
+            Button:
+                text: "Back"
+                on_touch_down: app.root.current = 'main'
+
+            Button:
+                text: "Easy"
+                on_touch_down: app.root.current = 'main'
+
+            Button:
+                text: "Normal"
+                on_touch_down: app.root.current = 'main'
+
+            Button:
+                text: "Hard"
+                on_touch_down: app.root.current = 'main'
+
+        ScrollView:  # The level list
+            height: 500
+            StackLayout:
+                id: level_list_layout
+                padding: 20
+                spacing: 10
+                on_pos: app.async_lazy_load_level_list(root)
