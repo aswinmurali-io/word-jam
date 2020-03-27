@@ -13,7 +13,7 @@ package.domain = org.blitzon
 source.dir = .
 
 # (list) Source files to include (let empty to include all the files)
-source.include_exts = py,png,jpg,kv,atlas,gif,csv,sql
+source.include_exts = py,png,jpg,kv,atlas,gif,csv,sql,save.csv
 
 # (list) List of inclusions using pattern matching
 #source.include_patterns = assets/*,images/*.png
@@ -36,7 +36,7 @@ version.filename = %(source.dir)s/main.py
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy,colorama,sqlite3
+requirements = python3, kivy, colorama, sqlite3, , jnius, kivmob
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -85,7 +85,7 @@ fullscreen = 0
 android.presplash_color = #FFFFFF
 
 # (list) Permissions
-android.permissions = INTERNET
+android.permissions = INTERNET, ACCESS_NETWORK_STATE
 
 # (int) Target Android API, should be as high as possible.
 #android.api = 27
@@ -156,7 +156,7 @@ android.permissions = INTERNET
 
 # (list) Gradle dependencies to add (currently works only with sdl2_gradle
 # bootstrap)
-#android.gradle_dependencies =
+android.gradle_dependencies = 'com.google.firebase:firebase-ads:10.2.0'
 
 # (list) add java compile options
 # this can for example be necessary when importing certain java libraries using the 'android.gradle_dependencies' option
@@ -203,7 +203,7 @@ android.permissions = INTERNET
 android.wakelock = True
 
 # (list) Android application meta-data to set (key=value format)
-#android.meta_data =
+# android.meta_data = 
 
 # (list) Android library project to add (will be added in the
 # project.properties automatically.)

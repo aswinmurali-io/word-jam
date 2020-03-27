@@ -74,10 +74,15 @@ Config.set("graphics", "resizable", False)
 Config.write()
 
 stime: str = get(LEVEL_TIME=True)  # The level time counter
-self_pointer_to_word_jam_class: App = None
+self_pointer_to_word_jam_class = None  # The application self pointer
 
 
+# The custom widget which will use to construct grids for the
+# cross word levels. This is actually a button widget with some
+# custom logic to fit the needs of this game
 class WordButton(Button):
+    # To prevent mulitple selection which use a static
+    # variable to lock the grid
     lock: bool = False
 
     # @kivy_timing -> Slow

@@ -1,5 +1,6 @@
 # The UI definitions of the game is here
 #:import com src.common
+#:import Clock kivy.clock.Clock
 #:import Window kivy.core.window.Window
 #:import Factory kivy.factory.Factory
 
@@ -171,19 +172,12 @@ ScreenManager:
                 on_touch_down: app.root.current = 'main'
 
             Button:
-                text: "Easy"
-                on_touch_down: app.root.current = 'main'
-
-            Button:
-                text: "Normal"
-                on_touch_down: app.root.current = 'main'
-
-            Button:
-                text: "Hard"
-                on_touch_down: app.root.current = 'main'
+                text: "Refresh"
+                on_touch_down: self.text = "Done"; app.async_lazy_load_level_list(root); Clock.schedule_once(lambda x: exec("self.text = 'Refresh'"), 1)
 
         ScrollView:  # The level list
             height: 500
+
             StackLayout:
                 id: level_list_layout
                 padding: 20
