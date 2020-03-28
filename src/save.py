@@ -3,6 +3,8 @@
 # The levels are stored in .csv format
 # 14 x 18 is the grid with total of 252 grid blocks
 
+# TODO: Need to optimize this code file
+
 import csv
 import shutil
 
