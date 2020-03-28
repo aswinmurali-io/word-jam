@@ -15,12 +15,11 @@ pygments = "^2.5.2"
 "kivy_deps.sdl2" = { platform = "win32", version = "^0.2.0" }
 "kivy_deps.glew" = { platform = "win32", version = "^0.2.0" }
 pillow = "^7.0.0"
-pygame = "^1.9.6"
-kivy = "^1.11.1"
 pyinstaller = "^3.6"
 colorama = "^0.4.3"
 mypy = "^0.761"
 flask = "^1.1.1"
+kivy = "^1.11.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^4.6"

@@ -7,14 +7,20 @@ a = Analysis(
     pathex=['word-jam'],
     binaries=[],
     datas=[
-    	('src/wordjam.kv', 'src/wordjam.kv'),
+    	('src/layout.kv', 'src/'),
     	('res/', 'res/'),
     	('lvl/', 'lvl/'),
 	],
-    hiddenimports=[],
+    hiddenimports=[
+        'pygame'
+        'pkg_resources.py2_warn',  # To fix PyInstaller issue #1963
+    ],
     hookspath=[],
     runtime_hooks=[],
-    excludes=[],
+    excludes=[
+        'lvl/save.csv',
+        'lvl/save.db'
+    ],
     win_no_prefer_redirects=False,
     win_private_assemblies=False,
     cipher=block_cipher,
