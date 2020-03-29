@@ -17,6 +17,9 @@ from src.save import (
     validate_character
 )
 
+# All the grid custom widget ids will be store here. This is because the ids
+# are not stored in kivy layout ids because there were dynamically updated so
+# we manually store the id reference of all the word button object
 grid_ptr: list = []
 
 
@@ -62,7 +65,7 @@ class WordButton(Button):
             # NOTE: Reload the level data again to check validation This needs
             # to be done because while building the grid all the elements are
             # popped out. Thus the GRID deque was empty.
-            load_level(get(LEVEL_NUMBER=True))
+            load_level(get(level_number=True))
             WordButton.lock = False
 
             # set the grid block to it's original form

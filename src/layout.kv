@@ -159,7 +159,8 @@ ScreenManager:
         size_hint_x: 0.35
         padding: 0, 30
         text: "Play"
-        disabled: True  if root.level_time == 'Not Completed' else False
+        disabled: True  if root.level_time == 'Not Completed' or root.level_time.find('0') > -1 else False
+        on_touch_down: app.root.current = 'main'
 
 <LevelList@Screen>:
     name: 'level'
@@ -176,7 +177,7 @@ ScreenManager:
         BoxLayout: # The difficulty bar
             size_hint_y: 0.1
             padding: 15
-            spacing: 10
+            spacing: 30
             orientation: 'horizontal'
 
             Button:
@@ -186,6 +187,12 @@ ScreenManager:
             Button:
                 text: "Refresh"
                 on_touch_down: self.text = "Done"; app.async_lazy_load_level_list(root); Clock.schedule_once(lambda x: exec("self.text = 'Refresh'"), 1)
+
+        Label:
+            text: "Press [b]Refresh[/b] button to sync the change in the level list"
+            markup: True
+            color: com.FONT_COLOR
+            size_hint_y: 0.05
 
         ScrollView:  # The level list
 

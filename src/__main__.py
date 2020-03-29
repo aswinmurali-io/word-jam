@@ -41,9 +41,9 @@ from src.common import (
     get_level_history,
     save_level_history
 )
-
+# COIN_PROGRESS, LEVEL_NUMBER, LEVEL_PROGRESS, LEVEL_TIME
 kivy.require("1.11.1")
-stime: str = get(LEVEL_TIME=True)  # The level time counter
+stime: str = get(level_time=True)  # The level time counter
 
 
 class WordJam(App):
@@ -63,7 +63,15 @@ class WordJam(App):
         if IS_MOBILE:
             for i in range(65, 91):
                 # Schedule in clock to make it faster (lazy loading)
-                self.root.ids.main.ids.keyboard_layout.add_widget(Button(text=chr(i), on_press=lambda x: threading.Thread(target=self.thread_check_validity_from_mobile_keyboard, args=(grid_ptr, x.text, )).start()))
+                self.root.ids.main.ids.keyboard_layout.add_widget(
+                    Button(
+                        text=chr(i), on_press=lambda x:
+                        threading.Thread(
+                            target=self.thread_check_validity_from_mobile_keyboard,
+                            args=(grid_ptr, x.text, )
+                        ).start()
+                    )
+                )
         # Start the timer event function
         Clock.schedule_interval(self.async_time, 1)
         # Bind android back button to exit
@@ -92,7 +100,7 @@ class WordJam(App):
             except IndexError:
                 # The current level we need to finish should be in In Progress
                 # status not in Not Completed
-                if i != get(LEVEL_NUMBER=True):
+                if i != get(level_number=True):
                     x.level_time = "Not Completed"
                 else:
                     x.level_time = "In Progress, No Records Found"
@@ -101,43 +109,44 @@ class WordJam(App):
     # @kivy_timing -> thread
     def async_time(self, *_) -> None:
         global stime
-        # NOTE: The LEVEL_NUMBER variable is not updating properly may be
+        # NOTE: The level_number variable is not updating properly may be
         # because of scope issue therefore the level progress save file is
         # used instead to get the next level number.
         # TODO: Find a better approach later for this logic
         if os.path.exists('flag'):  # -> The next level if condition
             # Load the deque with the next level grid info
-            x = get(LEVEL_NUMBER=True)
+            x = get(level_number=True)
             load_level(x)
             # Save the current level time in level history
             save_level_history(x - 1, stime, 0)
             # Reset the level timer for the next level
             stime = '00:00:00'
-            save(LEVEL_TIME=stime)
+            save(level_time=stime)
             # Request redrawing of the grid layout
             Clock.schedule_once(self.async_grid)
             # NOTE: A flag file was created to notify the main script when the
             # next level is required. The main script has no proper scope with
-            # the variables like LEVEL_NUMBER, LEVEL_PROGRESS etc. So we used
+            # the variables like level_number, level_progress etc. So we used
             # file as a message. Now we delete the file after use
             os.remove('flag')
         else:
             # updating the time by one second
             stime = (datetime.datetime.strptime(stime, "%H:%M:%S") + datetime.timedelta(seconds=1)).strftime("%H:%M:%S")
             # Save the current level timer
-            save(LEVEL_TIME=stime)
+            save(level_time=stime)
         # Detecting if it's Main Layout and applying code logic for it
         if self.root.current in 'main':
             # Update the time in the UI
             self.root.ids.main.ids.time.text = "[b]" + stime + "[/b]"
             # Load the coins from the save file and set the coin progress in UI
-            self.root.ids.main.ids.coins.text = str(get(COIN_PROGRESS=True))
+            self.root.ids.main.ids.coins.text = str(get(coin_progress=True))
 
     @kivy_timing
     def thread_check_validity_from_mobile_keyboard(self, ptr, key) -> None:
         def _(*__):
             for widget in ptr:
                 widget.event_keyboard(None, key=ord(key))
+
         Clock.schedule_once(_)
 
     @kivy_timing

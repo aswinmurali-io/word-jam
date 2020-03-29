@@ -16,17 +16,17 @@ from src.common import (
     save,
     GRID_HINT,
     LVL,
-    LEVEL_PROGRESS,
-    LEVEL_TOTAL_PROGRESS,
-    COIN_PROGRESS,
-    LEVEL_NUMBER,
+    level_progress,
+    level_total_progress,
+    coin_progress,
+    level_number,
 )
 
 
 @timing
 def load_level(number) -> None:
-    global GRID, GRID_HINT, LEVEL_TOTAL_PROGRESS
-    LEVEL_TOTAL_PROGRESS = 0
+    global GRID, GRID_HINT, level_total_progress
+    level_total_progress = 0
     with open(LVL + str(number) + ".csv") as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=",")
         for row in csv_reader:
@@ -37,36 +37,36 @@ def load_level(number) -> None:
             GRID += one_char_row
             for char in one_char_row:
                 if char.islower():
-                    LEVEL_TOTAL_PROGRESS += 1
+                    level_total_progress += 1
             GRID_HINT += hint_row
 
 
 @timing
 def validate_character(char: str, grid_id: int) -> bool:
-    global LEVEL_PROGRESS, COIN_PROGRESS, LEVEL_NUMBER, LEVEL_TOTAL_PROGRESS
+    global level_progress, coin_progress, level_number, level_total_progress
 
     if GRID[int(grid_id)] == char:
-        LEVEL_PROGRESS += 1
-        if LEVEL_PROGRESS >= LEVEL_TOTAL_PROGRESS:
-            COIN_PROGRESS += 10
-            save(COIN_PROGRESS=COIN_PROGRESS)
-            LEVEL_NUMBER += 1
+        level_progress += 1
+        if level_progress >= level_total_progress:
+            coin_progress += 10
+            save(coin_progress=coin_progress)
+            level_number += 1
             try:
-                shutil.copyfile(LVL + str(LEVEL_NUMBER) + ".csv", LVL + "save.csv")
+                shutil.copyfile(LVL + str(level_number) + ".csv", LVL + "save.csv")
             except FileNotFoundError:
-                Logger.warn("Lvl Not Found: " + str(LEVEL_NUMBER) + ".csv unable to load")
-            # NOTE: There is some scope issue with the LEVEL_NUMBER and other
+                Logger.warn("Lvl Not Found: " + str(level_number) + ".csv unable to load")
+            # NOTE: There is some scope issue with the level_number and other
             # variable therefore to tell the main script that the level is
             # completed we will create a file which will act as message so the
             # UI thread can display the next level
             open("flag", "w").write("0")
-            Logger.info("Lvl Progress : Next Level loaded " + str(LEVEL_NUMBER) + ".csv")
-            LEVEL_PROGRESS = 0
+            Logger.info("Lvl Progress : Next Level loaded " + str(level_number) + ".csv")
+            level_progress = 0
         # Save the current progress and total progress in a .save file
-        save(LEVEL_PROGRESS=LEVEL_PROGRESS)
-        save(COIN_PROGRESS=COIN_PROGRESS)
-        save(LEVEL_NUMBER=LEVEL_NUMBER)
-        Logger.info("Lvl Progress : " + str(LEVEL_PROGRESS) + " / " + str(LEVEL_TOTAL_PROGRESS))
+        save(level_progress=level_progress)
+        save(coin_progress=coin_progress)
+        save(level_number=level_number)
+        Logger.info("Lvl Progress : " + str(level_progress) + " / " + str(level_total_progress))
         return True
     return False
 
