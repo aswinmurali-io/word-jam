@@ -17,7 +17,6 @@ ScreenManager:
 <WordButton@Button>:
     on_touch_down: Clock.schedule_once(lambda x: exec("app.root.ids.main.ids.status_bar.text = com.DEFAULT_STATUS_TEXT"), 5); app.root.ids.main.ids.status_bar.text = ("Press [b]ESC[/b] to cancel selection" if not com.IS_MOBILE else "Press [b]any[/b] letter to cancel selection") + ((", [b]hint[/b]: " + com.GRID_HINT[int(self.id)][1:-1]) if com.GRID_HINT[int(self.id)][1:-1] != "" else "")
 
-
 <MainLayout@Screen>:
     name: "main"
     # Setting up white background for the layout
@@ -37,7 +36,6 @@ ScreenManager:
             id: content
             orientation: 'vertical'
             padding: 15 if not com.IS_MOBILE else 30
-            on_touch_down: Window.request_keyboard(com._, self, 'text')
 
             GridLayout:
                 id: grid

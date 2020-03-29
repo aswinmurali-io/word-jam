@@ -14,7 +14,6 @@ from src.monitor import timing
 from src.common import (
     GRID,
     save,
-    save_level_history,
     GRID_HINT,
     LVL,
     LEVEL_PROGRESS,
@@ -45,7 +44,7 @@ def load_level(number) -> None:
 @timing
 def validate_character(char: str, grid_id: int) -> bool:
     global LEVEL_PROGRESS, COIN_PROGRESS, LEVEL_NUMBER, LEVEL_TOTAL_PROGRESS
-    
+
     if GRID[int(grid_id)] == char:
         LEVEL_PROGRESS += 1
         if LEVEL_PROGRESS >= LEVEL_TOTAL_PROGRESS:

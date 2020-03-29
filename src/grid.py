@@ -1,7 +1,6 @@
 from kivy.clock import Clock
 from kivy.base import EventLoop
 from kivy.uix.button import Button
-from kivy.core.window import Window
 
 from src.monitor import kivy_timing
 
