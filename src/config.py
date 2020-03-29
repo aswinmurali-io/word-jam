@@ -4,7 +4,7 @@ from kivy.config import Config
 from src.common import RES
 
 Config.set("kivy", "log_maxfiles", 10)
-Config.set("kivy", "log_level", "info")
+Config.set("kivy", "log_level", "debug")
 Config.set("kivy", "exit_on_escape", False)
 Config.set("kivy", "pause_on_minimize", False)
 Config.set("kivy", "allow_screensaver", False)

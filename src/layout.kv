@@ -17,6 +17,7 @@ ScreenManager:
 <WordButton@Button>:
     on_touch_down: Clock.schedule_once(lambda x: exec("app.root.ids.main.ids.status_bar.text = com.DEFAULT_STATUS_TEXT"), 5); app.root.ids.main.ids.status_bar.text = ("Press [b]ESC[/b] to cancel selection" if not com.IS_MOBILE else "Press [b]any[/b] letter to cancel selection") + ((", [b]hint[/b]: " + com.GRID_HINT[int(self.id)][1:-1]) if com.GRID_HINT[int(self.id)][1:-1] != "" else "")
 
+
 <MainLayout@Screen>:
     name: "main"
     # Setting up white background for the layout
@@ -32,15 +33,30 @@ ScreenManager:
         orientation: 'vertical'
         padding: 5 if not com.IS_MOBILE else 30
 
+        BoxLayout:  # Content Canvas
+            id: content
+            orientation: 'vertical'
+            padding: 15 if not com.IS_MOBILE else 30
+            on_touch_down: Window.request_keyboard(com._, self, 'text')
+
+            GridLayout:
+                id: grid
+                cols: 14
+                rows: 20
+
+            Image:
+                id: load
+                source: com.RES + 'banner.png'
+
         BoxLayout:
-            size_hint_y: 0.1
+            size_hint_y: 0.08
             orientation: 'horizontal'
 
             BoxLayout:
                 pos: self.pos
                 size: self.size
                 padding: 10
-                size_hint_x: 2
+                size_hint_x: 1
                 orientation: 'horizontal'
 
                 Button:
@@ -60,7 +76,7 @@ ScreenManager:
                     pos_hint_y: 1.5
                     anim_loop: 0
                     anim_delay: 0.1
-                    size_hint: 0.3, 0.3
+                    size_hint: (0.45, 0.45) if not com.IS_MOBILE else (0.9, 0.9)
                     source: com.RES + 'coin.gif'
 
                 Label:
@@ -78,12 +94,12 @@ ScreenManager:
                 padding: 10
                 pos: self.pos
                 size: self.size
-                size_hint_x: 0.9
+                size_hint_x: 1.1
                 orientation: 'horizontal'
 
                 Image:
                     pos: self.pos
-                    size_hint: 0.3, 0.3
+                    size_hint: (0.45, 0.45) if not com.IS_MOBILE else (0.9, 0.9)
                     pos_hint_y: 1.5
                     source: com.RES + 'clock.png'
 
@@ -96,23 +112,8 @@ ScreenManager:
                     color: com.FONT_COLOR
                     text: '[b]00:00:00[/b]'
 
-        BoxLayout:  # Content Canvas
-            id: content
-            orientation: 'vertical'
-            padding: 15 if not com.IS_MOBILE else 30
-            on_touch_down: Window.request_keyboard(com._, self, 'text')
-
-            GridLayout:
-                id: grid
-                cols: 14
-                rows: 20
-
-            Image:
-                id: load
-                source: com.RES + 'banner.png'
-
         BoxLayout:  # Status bar
-            size_hint_y: 0.05
+            size_hint_y: 0.08
 
             Label:  # The credit text
                 id: status_bar
@@ -122,6 +123,14 @@ ScreenManager:
                 color: com.FONT_COLOR
                 text: com.DEFAULT_STATUS_TEXT
                 halign: 'left' if not com.IS_MOBILE else 'center'
+
+        BoxLayout:
+            size_hint_y: 0.4 if com.IS_MOBILE else 0.05
+
+            GridLayout:
+                id: keyboard_layout
+                cols: 9
+                rows: 3
 
 
 <LevelSelectionButton@BoxLayout>: # Level Selection Button

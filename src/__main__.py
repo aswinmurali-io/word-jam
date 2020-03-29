@@ -1,12 +1,15 @@
 # !/usr/bin/python
 # The main game code
 
+# NOTE: optimise the async_lazy_load_level_list(), validate_character()
+
 import sys
 import kivy
 import glob
 import shutil
 import ctypes
 import os.path
+import threading
 import datetime
 
 from kivy.app import App
@@ -15,10 +18,11 @@ from kivy.lang import Builder
 from kivy.logger import Logger
 from kivy.base import EventLoop
 from kivy.factory import Factory
+from kivy.uix.button import Button
 
 from src.config import *
 from src.save import load_level
-from src.grid import WordButton
+from src.grid import WordButton, grid_ptr
 
 from src.monitor import (
     timing,
@@ -39,7 +43,6 @@ from src.common import (
 )
 
 kivy.require("1.11.1")
-
 stime: str = get(LEVEL_TIME=True)  # The level time counter
 
 
@@ -56,6 +59,11 @@ class WordJam(App):
             Clock.schedule_once(self.async_grid)
             # Removing the banner logo after use
             Clock.schedule_once(lambda x: self.root.ids.main.ids.content.remove_widget(self.root.ids.main.ids.load), 1)
+        # Build the mobile keyboard
+        if IS_MOBILE:
+            for i in range(65, 91):
+                # Schedule in clock to make it faster (lazy loading)
+                self.root.ids.main.ids.keyboard_layout.add_widget(Button(text=chr(i), on_press=lambda x: threading.Thread(target=self.thread_check_validity_from_mobile_keyboard, args=(grid_ptr, x.text, )).start()))
         # Start the timer event function
         Clock.schedule_interval(self.async_time, 1)
         # Bind android back button to exit
@@ -93,9 +101,9 @@ class WordJam(App):
     # @kivy_timing -> thread
     def async_time(self, *_) -> None:
         global stime
-        # NOTE: The LEVEL_NUMBER variable is not updating properly
-        # may be because of scope issue therefore the level progress
-        # save file is used instead to get the next level number.
+        # NOTE: The LEVEL_NUMBER variable is not updating properly may be
+        # because of scope issue therefore the level progress save file is
+        # used instead to get the next level number.
         # TODO: Find a better approach later for this logic
         if os.path.exists('flag'):  # -> The next level if condition
             # Load the deque with the next level grid info
@@ -126,10 +134,17 @@ class WordJam(App):
             self.root.ids.main.ids.coins.text = str(get(COIN_PROGRESS=True))
 
     @kivy_timing
+    def thread_check_validity_from_mobile_keyboard(self, ptr, key) -> None:
+        def _(*__):
+            for widget in ptr:
+                widget.event_keyboard(None, key=ord(key))
+        Clock.schedule_once(_)
+
+    @kivy_timing
     def async_grid(self, *_) -> bool:
         # Reset the grid id to freshly start the deque GRID for next level
         reset_grid_id()
-        # if self.root.current in 'main':
+        self.root.ids.main.ids.grid.clear_widgets()
         # Clean the previous level grids for new once. Must be in clock
         Clock.schedule_once(lambda x: self.root.ids.main.ids.grid.clear_widgets())
         # Generate the grid using custom button widget in loop

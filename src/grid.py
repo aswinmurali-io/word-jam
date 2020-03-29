@@ -1,6 +1,7 @@
 from kivy.clock import Clock
 from kivy.base import EventLoop
 from kivy.uix.button import Button
+from kivy.core.window import Window
 
 from src.monitor import kivy_timing
 
@@ -17,6 +18,8 @@ from src.save import (
     validate_character
 )
 
+grid_ptr: list = []
+
 
 # The custom widget which will use to construct grids for the cross word
 # levels. This is actually a button widget with some custom logic for the game
@@ -27,10 +30,11 @@ class WordButton(Button):
     # @kivy_timing -> Slow
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        grid_ptr.append(self)
         self.opacity: float = 0.0
         self.id: str = generate_grid_id()
         self.disabled: bool = True
-        self.text: str = str(GRID.popleft()) if len(GRID) >= 0 else "X"
+        self.text: str = str(GRID.popleft()) if len(GRID) >= 0 else 'X'
         self.level_logic()
         self.bind(on_press=self.on_click)
         self.fade_effect_ptr = Clock.schedule_interval(self.fade_effect, 0.001)
@@ -53,7 +57,7 @@ class WordButton(Button):
             self.background_normal = ""
             self.background_color = 0, 1, 1, 1
 
-    # @kivy_timing -> Slow
+    # @kivy_timing ->
     def event_keyboard(self, __, key: int, *_):
         if self.text == "?":
             # NOTE: Reload the level data again to check validation This needs
@@ -75,7 +79,9 @@ class WordButton(Button):
             if key == 27:
                 Clock.schedule_once(not_correct_letter, 1)
 
-            if validate_character(chr(key), self.id):
+            # The key mush be the ascii value of the lowercase character as
+            # the save file contains the lowercase chararcter to validate with
+            if validate_character(chr(key).lower(), self.id):
                 self.text = chr(key).upper()
                 save_level(int(self.id), chr(key).upper())
                 Clock.schedule_once(set_grid_block_to_default, 1)
