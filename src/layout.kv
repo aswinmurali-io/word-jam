@@ -133,7 +133,8 @@ ScreenManager:
 
 <LevelSelectionButton@BoxLayout>: # Level Selection Button
     orientation: 'horizontal'
-    size_hint_y: 0.1
+    size_hint_y: None
+    height: 90
     level_number: ''
     level_time: ''
 
@@ -187,10 +188,11 @@ ScreenManager:
                 on_touch_down: self.text = "Done"; app.async_lazy_load_level_list(root); Clock.schedule_once(lambda x: exec("self.text = 'Refresh'"), 1)
 
         ScrollView:  # The level list
-            height: 500
 
             StackLayout:
                 id: level_list_layout
                 padding: 20
                 spacing: 10
                 on_pos: app.async_lazy_load_level_list(root)
+                size_hint_y: None
+                height: 5000

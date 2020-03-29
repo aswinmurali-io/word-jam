@@ -16,4 +16,7 @@ Config.set("graphics", "width", 580)
 Config.set("graphics", "height", 850)
 Config.set("graphics", "resizable", False)
 
+# To maybe improve performance in old devices
+Config.set("graphics", "fbo", "force-hardware")
+
 Config.write()
