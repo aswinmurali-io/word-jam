@@ -13,13 +13,13 @@ package.domain = org.blitzon
 source.dir = .
 
 # (list) Source files to include (let empty to include all the files)
-source.include_exts = py,png,jpg,kv,atlas,gif,csv,sql,save.csv
+source.include_exts = py,png,jpg,kv,atlas,gif,so,csv,sql
 
 # (list) List of inclusions using pattern matching
 #source.include_patterns = assets/*,images/*.png
 
 # (list) Source files to exclude (let empty to not exclude anything)
-source.exclude_exts = spec,LICENSE,ico
+source.exclude_exts = spec,LICENSE,ico,save.csv,save.db
 
 # (list) List of directory to exclude (let empty to not exclude anything)
 source.exclude_dirs = tests,bin,logs
