@@ -14,7 +14,8 @@ The project uses `poetry` python package manager to handle the project dependies
 If your in linux then install the following packages to verify/install the required linux packages
 
 ```shell
-    $ sudo apt-get install python3-setuptools python3-opengl python3-dev build-essential python3-pip libgl1-mesa-dev libgles2-mesa-dev zlib1g-dev
+    $ sudo apt-get install python3-setuptools python3-opengl python3-dev \
+    build-essential python3-pip libgl1-mesa-dev libgles2-mesa-dev zlib1g-dev
 ```
 
 The `poetry install` command can be used to install all the dependies for the project.
