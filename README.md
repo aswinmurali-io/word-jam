@@ -11,7 +11,7 @@ The project uses `poetry` python package manager to handle the project dependies
 
 > if your on linux you need to make sure you have the proper graphic drivers installed. Check if you have the `libgl1-mesa-dev` linux package installed in your linux distro to run the game
 
-Install linux packages
+If your in linux then install the following packages to verify/install the required linux packages
 
 ```shell
     $ sudo apt-get install python3-setuptools python3-opengl python3-dev build-essential python3-pip libgl1-mesa-dev libgles2-mesa-dev zlib1g-dev

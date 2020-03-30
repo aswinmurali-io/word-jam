@@ -2,13 +2,16 @@
 name = "src"
 version = "0.1.0"
 description = "A crossword game which you can play during your free time"
-authors = ["AshBlade <jeenamurali100tab@gmail.com>"]
+authors = ["AshBlade <aswinmurali.co@gmail.com>"]
 readme = 'README.md'
-homepage = "https://github.com/synccodes/word-jam"
-repository = "https://github.com/synccodes/word-jam"
+homepage = "https://github.com/aswinmurali-io/word-jam"
+repository = "https://github.com/aswinmurali-io/word-jam"
 
 [tool.poetry.dependencies]
 python = "^3.6"
+pip = "^20.0.2"
+setuptools = "^46.1.3"
+virtualenv = "^20.0.15"
 pypiwin32 = { platform = "win32", version = "^223" }
 docutils = "^0.15.2"
 pygments = "^2.5.2"
@@ -19,8 +22,8 @@ pyinstaller = "^3.6"
 colorama = "^0.4.3"
 mypy = "^0.761"
 flask = "^1.1.1"
-kivy = "^1.11.1"
 pygame = "^1.9.6"
+kivy = "^1.11.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^4.6"
