@@ -1,4 +1,8 @@
 # -*- mode: python ; coding: utf-8 -*-
+try:
+    from kivy_deps import sdl2, glew
+except:
+    pass
 
 block_cipher = None
 
@@ -8,6 +12,7 @@ a = Analysis(
     binaries=[],
     datas=[
     	('src/layout.kv', 'src/'),
+        ('src/setup.sql', 'src/'),
     	('res/', 'res/'),
     	('lvl/', 'lvl/'),
 	],
@@ -41,8 +46,8 @@ exe = EXE(
     name='Word Jam',
     debug=False,
     bootloader_ignore_signals=False,
-    strip=True,
-    upx=True,
+    strip=False,
+    upx=False,
     console=True,
 	icon='res/icon.ico'
 )
@@ -52,8 +57,9 @@ coll = COLLECT(
     a.binaries,
     a.zipfiles,
     a.datas,
-    strip=True,
-    upx=True,
+    *[Tree(p) for p in (sdl2.dep_bins + glew.dep_bins)],
+    strip=False,
+    upx=False,
     upx_exclude=[],
     name='main'
 )

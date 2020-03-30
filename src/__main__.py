@@ -42,7 +42,7 @@ from src.common import (
     save_level_history
 )
 # COIN_PROGRESS, LEVEL_NUMBER, LEVEL_PROGRESS, LEVEL_TIME
-kivy.require("1.11.1")
+kivy.require("1.11.0")
 stime: str = get(level_time=True)  # The level time counter
 
 
