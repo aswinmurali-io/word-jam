@@ -13,8 +13,8 @@
 # entire project. The entry point will be used by the build scripts to compile
 # the project to the platform's respective binaries
 #
-# From the GitHub Repo https://github.com/synccodes/word-jam
-# By Synccodes/AshBlade
+# From the GitHub Repo https://github.com/aswinmurali-io/word-jam
+# By aswinmurali a.k.a AshBlade
 #
 # For best pratice enable Windows Subsystem For Linux to develop in mobiles
 # Developed in CPython-3. Licensed under the following license type :-
