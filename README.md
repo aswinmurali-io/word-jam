@@ -15,7 +15,7 @@ If your in linux then install the following packages to verify/install the requi
 
 ```shell
     $ sudo apt-get install python3-setuptools python3-opengl python3-dev \
-    build-essential python3-pip libgl1-mesa-dev libgles2-mesa-dev zlib1g-dev
+      build-essential python3-pip libgl1-mesa-dev libgles2-mesa-dev zlib1g-dev
 ```
 
 The `poetry install` command can be used to install all the dependies for the project.
