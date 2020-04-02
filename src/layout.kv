@@ -74,7 +74,7 @@ ScreenManager:
                     pos_hint_y: 1.5
                     anim_loop: 0
                     anim_delay: 0.1
-                    size_hint: (0.45, 0.45) if not com.IS_MOBILE else (0.9, 0.9)
+                    size_hint: 0.45, 0.45
                     source: com.RES + 'coin.gif'
 
                 Label:
@@ -97,7 +97,7 @@ ScreenManager:
 
                 Image:
                     pos: self.pos
-                    size_hint: (0.45, 0.45) if not com.IS_MOBILE else (0.9, 0.9)
+                    size_hint: (0.45, 0.45)
                     pos_hint_y: 1.5
                     source: com.RES + 'clock.png'
 
@@ -199,7 +199,7 @@ ScreenManager:
             StackLayout:
                 id: level_list_layout
                 padding: 20
-                spacing: 10
-                on_pos: app.async_lazy_load_level_list(root)
+                spacing: 20
+                # on_pos: app.async_lazy_load_level_list(root)
                 size_hint_y: None
-                height: 5000
+                height: 100

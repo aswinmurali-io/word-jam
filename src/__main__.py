@@ -103,7 +103,7 @@ class WordJam(App):
         levels: int = len(glob.glob(LVL + '*.csv'))
         records = get_level_history()
         for i in range(1, levels):
-            x = Factory.LevelSelectionButton()
+            x = Factory.LevelSelectionButton(size_hint_y=4.5, spacing=30)
             x.level_number = "Level " + str(i)
             try:
                 # i - 1 is because we are starting loop i from 1 instead of 0
@@ -180,6 +180,7 @@ class WordJam(App):
     @kivy_timing
     def event_keyboard(self, __, key: int, *_) -> None:
         if key == 27 and IS_MOBILE and not WordButton.lock:
+            os._exit(0)
             App.get_running_app().stop()
 
 

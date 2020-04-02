@@ -26,7 +26,6 @@ from src.common import (
 
 @timing
 def load_level(number) -> None:
-    print(number)
     global GRID, GRID_HINT, level_total_progress
     level_total_progress = 0
     GRID_HINT.clear()

@@ -84,8 +84,6 @@ class WordButton(Button):
             def set_grid_block_to_default(*_):
                 self.background_normal = DEFAULT_ATLAS
                 self.background_color = 1, 1, 1, 1
-                print(GRID_HINT)
-                print("selection=", GRID_HINT[int(self.id)].split())
                 try:
                     selection = GRID_HINT[int(self.id)].split()[1]
                 except IndexError:
