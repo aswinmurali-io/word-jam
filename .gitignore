@@ -1,6 +1,8 @@
 # buildozer project files
 .buildozer/
 bin/
+main.build
+main.dist
 
 # Power Point live edit file
 ~$src.pptx

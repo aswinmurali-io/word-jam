@@ -58,6 +58,15 @@ class WordButton(Button):
             WordButton.lock = True
             self.background_normal = ""
             self.background_color = 0, 1, 1, 1
+        if self.text == "" and not self.disabled and WordButton.lock:
+            self.text = "?"
+            for widget in grid_ptr:
+                if widget.text == "?" and widget != self:
+                    widget.background_normal = DEFAULT_ATLAS
+                    widget.background_color = 1, 1, 1, 1
+                    widget.text = ""
+            self.background_normal = ""
+            self.background_color = 0, 1, 1, 1
 
     # @kivy_timing ->
     def event_keyboard(self, __, key: int, *_):
