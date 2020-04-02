@@ -64,15 +64,15 @@ This will take a lot of time to complete.
 ### Desktop
 
 To build the project we will be using `nuitka` package inside `poetry` virtual env.
-The build instructions are specified in below for desktop
+The build instructions are specified below for desktop
 
-> Delete the .kivy folder to do proper build. Otherwise your previous configuration for other projects might affect this games
+> Delete the .kivy folder to do proper build. Otherwise your previous configuration of other projects might affect this games
 
 > If you use Anaconda Python then type the command `conda activate base` first if poetry is installed there
 
 ### Windows
 ```shell
-    $ poetry run python -m nuitka --follow-imports --msvc=14.0 --include-plugin-directory=nuitka-dependencies.py --include-package=src --standalone main.py
+    $ poetry run python -m nuitka --follow-imports --msvc=14.0 --include-plugin-directory=nuitka-dependencies.py --include-package=src --standalone --windows-disable-console --remove-output main.py
     $ poetry run python nuitka-optimise.py
 ```
 
@@ -101,3 +101,9 @@ to do type checking. To check error type the following command
 ```
 
 > There may or may not be errors found. Things that are dynamically loaded will not be recognised and therefore show error
+
+To see the android application's log use android `adb` command. Type the following command to filter python logcat
+
+```shell
+    $ adb -d logcat *:S python:D
+```

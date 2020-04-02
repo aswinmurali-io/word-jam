@@ -23,36 +23,34 @@
 #
 
 import sys
-"""
 
-def prep_win_standalone():
-    class DummyStream():
-        def __init__(self):
-            pass
+if sys.platform == 'win32':
+    def prep_win_standalone():
+        class DummyStream():
+            def __init__(self):
+                pass
 
-        def write(self, data):
-            pass
+            def write(self, data):
+                pass
 
-        def read(self, data):
-            pass
+            def read(self, data):
+                pass
 
-        def flush(self):
-            pass
+            def flush(self):
+                pass
 
-        def close(self):
-            pass
+            def close(self):
+                pass
 
-    sys.stdin = DummyStream()
-    sys.stdout = DummyStream()
-    sys.stderr = DummyStream()
-    sys.__stdin__ = DummyStream()
-    sys.__stdout__ = DummyStream()
-    sys.__stderr__ = DummyStream()
+        sys.stdin = DummyStream()
+        sys.stdout = DummyStream()
+        sys.stderr = DummyStream()
+        sys.__stdin__ = DummyStream()
+        sys.__stdout__ = DummyStream()
+        sys.__stderr__ = DummyStream()
 
+    prep_win_standalone()
 
-prep_win_standalone()
-
-"""
 from src.__main__ import main
 
 __version__ = '0.0.1'

@@ -91,3 +91,4 @@ import kivy.core.window.window_info
 # import kivy.core.window.window_pygame
 # import kivy.core.window.window_sdl
 # import kivy.core.window.window_x11
+import kivy.uix.stacklayout
