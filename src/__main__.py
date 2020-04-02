@@ -167,10 +167,13 @@ class WordJam(App):
         self.root.ids.main.ids.grid.clear_widgets()
         # Clean the previous level grids for new once. Must be in clock
         Clock.schedule_once(lambda x: self.root.ids.main.ids.grid.clear_widgets())
+        grid_ptr.clear()
         # Generate the grid using custom button widget in loop
         for i in range(MAX_GRID):
             # Schedule in clock to make it faster (lazy loading)
             Clock.schedule_once(lambda x: self.root.ids.main.ids.grid.add_widget(WordButton(text=" ")))
+        for widget in grid_ptr:
+            widget.text = ""
         return True
 
     # Exit handler for android and other mobile devices

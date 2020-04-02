@@ -14,6 +14,7 @@ from src.monitor import timing
 from src.common import (
     GRID,
     save,
+    get,
     GRID_HINT,
     LVL,
     level_progress,
@@ -25,9 +26,11 @@ from src.common import (
 
 @timing
 def load_level(number) -> None:
+    print(number)
     global GRID, GRID_HINT, level_total_progress
     level_total_progress = 0
-    with open(LVL + str(number) + ".csv") as csv_file:
+    GRID_HINT.clear()
+    with open(LVL + str(get(level_number=True)) + ".csv") as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=",")
         for row in csv_reader:
             hint_row, one_char_row = [], []

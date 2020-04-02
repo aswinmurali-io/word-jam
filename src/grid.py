@@ -36,8 +36,7 @@ class WordButton(Button):
         grid_ptr.append(self)
         self.opacity: float = 0.0
         self.id: str = generate_grid_id()
-        # give the id of the next automatically selected grid
-        self.next_auto_selection_id: str = self.id
+        self.next_auto_selection_id = self.id
         self.disabled: bool = True
         self.text: str = str(GRID.popleft()) if len(GRID) >= 0 else 'X'
         self.level_logic()
@@ -63,24 +62,12 @@ class WordButton(Button):
             self.background_color = 0, 1, 1, 1
         if self.text == "" and not self.disabled and WordButton.lock:
             self.text = "?"
-            # Down selection
+            # remove previous selection
             for widget in grid_ptr:
                 if widget.text == "?" and widget != self:
                     widget.background_normal = DEFAULT_ATLAS
                     widget.background_color = 1, 1, 1, 1
                     widget.text = ""
-                # Auto grid selection
-                selection = GRID_HINT[int(self.id)].split()[1]
-                if selection == 'd':
-                    self.next_auto_selection_id = str(int(self.id) + 14)
-                elif selection == 'u':
-                    self.next_auto_selection_id = str(int(self.id) - 14)
-                elif selection == 'l':
-                    self.next_auto_selection_id = str(int(self.id) - 1)
-                elif selection == 'r':
-                    self.next_auto_selection_id = str(int(self.id) + 1)
-                else:
-                    self.next_auto_selection_id = self.id
             self.background_normal = ""
             self.background_color = 0, 1, 1, 1
 
@@ -97,11 +84,57 @@ class WordButton(Button):
             def set_grid_block_to_default(*_):
                 self.background_normal = DEFAULT_ATLAS
                 self.background_color = 1, 1, 1, 1
+                print(GRID_HINT)
+                print("selection=", GRID_HINT[int(self.id)].split())
+                try:
+                    selection = GRID_HINT[int(self.id)].split()[1]
+                except IndexError:
+                    selection = '0'
+                if selection == 'd':
+                    self.next_auto_selection_id = str(int(self.id) + 14)
+                if selection == 'dd':
+                    self.next_auto_selection_id = str(int(self.id) + 28)
+
+                elif selection == 'u':
+                    self.next_auto_selection_id = str(int(self.id) - 14)
+                if selection == 'uu':
+                    self.next_auto_selection_id = str(int(self.id) - 28)
+
+                elif selection == 'l':
+                    self.next_auto_selection_id = str(int(self.id) - 1)
+                elif selection == 'll':
+                    self.next_auto_selection_id = str(int(self.id) - 2)
+
+                elif selection == 'r':
+                    self.next_auto_selection_id = str(int(self.id) + 1)
+                elif selection == 'rr':
+                    self.next_auto_selection_id = str(int(self.id) + 2)
+
+                elif selection == 'dr':
+                    x = str(int(self.id) + 14)
+                    self.next_auto_selection_id = str(int(x) + 1)
+                elif selection == 'ur':
+                    x = str(int(self.id) - 14)
+                    self.next_auto_selection_id = str(int(x) + 1)
+
+                elif selection == 'dl':
+                    x = str(int(self.id) + 14)
+                    self.next_auto_selection_id = str(int(x) - 1)
+                elif selection == 'ul':
+                    x = str(int(self.id) - 14)
+                    self.next_auto_selection_id = str(int(x) - 1)
+
+                elif selection == '0':
+                    self.next_auto_selection_id = '0'
                 for widget in grid_ptr:
-                    if widget.id == self.next_auto_selection_id:
-                        widget.background_normal = ""
-                        widget.background_color = 0, 1, 1, 1
-                        widget.text = '?'
+                    try:
+                        if widget.id == self.next_auto_selection_id != self.id and not widget.text.upper():
+                            widget.background_normal = ""
+                            widget.background_color = 0, 1, 1, 1
+                            widget.text = '?'
+                    except AttributeError:
+                        pass
+                WordButton.lock = True
 
             def not_correct_letter(*_):
                 self.text = ""
