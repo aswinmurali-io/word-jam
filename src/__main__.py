@@ -103,7 +103,10 @@ class WordJam(App):
         levels: int = len(glob.glob(LVL + '*.csv'))
         records = get_level_history()
         for i in range(1, levels):
-            x = Factory.LevelSelectionButton(size_hint_y=4.5, spacing=30)
+            if IS_MOBILE:
+                x = Factory.LevelSelectionButton(size_hint_y=4.5, spacing=30)
+            else:
+                x = Factory.LevelSelectionButton()
             x.level_number = "Level " + str(i)
             try:
                 # i - 1 is because we are starting loop i from 1 instead of 0
