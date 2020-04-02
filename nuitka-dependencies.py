@@ -30,11 +30,12 @@ import kivy.input.providers.mactouch
 import kivy.input.providers.mtdev
 
 # compiled modules
-from kivy.graphics import *
-from kivy.graphics.cgl_backend import *
 import kivy.event
 import kivy.graphics.buffer
 import kivy.graphics.c_opengl_debug
+import kivy.graphics.cgl_backend.cgl_glew
+import kivy.graphics.cgl.cgl_get_backend_name
+import kivy.graphics.cgl_backend.cgl_gl
 import kivy.graphics.compiler
 import kivy.graphics.context_instructions
 import kivy.graphics.fbo
@@ -56,13 +57,13 @@ import kivy.properties
 # core
 # import kivy.core.audio.audio_gstplayer
 # import kivy.core.audio.audio_pygst
-import kivy.core.audio.audio_sdl2
+# import kivy.core.audio.audio_sdl2
 # import kivy.core.audio.audio_pygame
 # import kivy.core.camera.camera_avfoundation
 # import kivy.core.camera.camera_pygst
 # import kivy.core.camera.camera_opencv
 # import kivy.core.camera.camera_videocapture
-import kivy.core.clipboard.clipboard_sdl2
+# import kivy.core.clipboard.clipboard_sdl2
 # import kivy.core.clipboard.clipboard_android
 # import kivy.core.clipboard.clipboard_pygame
 # import kivy.core.clipboard.clipboard_dummy

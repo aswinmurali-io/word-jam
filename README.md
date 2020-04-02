@@ -63,18 +63,37 @@ This will take a lot of time to complete.
 
 ### Desktop
 
-To build the project we will be using `pyinstaller` package inside `poetry` virtual env.
-The build instructions are specified in `pyinstaller.spec` for desktop
+To build the project we will be using `nuitka` package inside `poetry` virtual env.
+The build instructions are specified in below for desktop
 
 > Delete the .kivy folder to do proper build. Otherwise your previous configuration for other projects might affect this games
 
+> If you use Anaconda Python then type the command `conda activate base` first if poetry is installed there
+
+### Windows
 ```shell
-    $ poetry run python -m PyInstaller pyinstaller.spec
+    $ poetry run python -m nuitka --follow-imports --msvc=14.0 --include-plugin-directory=nuitka-dependencies.py --include-package=src --standalone main.py
+    $ poetry run python nuitka-optimise.py
 ```
+
+### Linux
+```shell
+    $ poetry run python -m nuitka --mingw64 --follow-imports --include-plugin-directory=nuitka-dependencies.py --include-package=src --standalone main.py
+    $ poetry run python nuitka-optimise.py
+```
+
+> The compiled desktop app will be stored in main.dist folder
+
+### Android
+```shell
+    $ buildozer android release
+```
+
+> The compiled android app will be stored in bin folder
 
 ### Development
 
-To do type check which this project follow. We use the `mypy` module. Note you need atleast `Python 3.7`
+To do type check which this project follows. We use the `mypy` module. Note you need atleast `Python 3.7`
 to do type checking. To check error type the following command
 
 ```shell
