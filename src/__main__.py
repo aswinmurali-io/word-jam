@@ -61,6 +61,7 @@ class WordJam(App):
             Clock.schedule_once(lambda x: self.root.ids.main.ids.content.remove_widget(self.root.ids.main.ids.load), 1)
         # Build the mobile keyboard
         if IS_MOBILE:
+            # Alphabet ASCII range
             for i in range(65, 91):
                 # Schedule in clock to make it faster (lazy loading)
                 self.root.ids.main.ids.keyboard_layout.add_widget(
@@ -72,6 +73,16 @@ class WordJam(App):
                         ).start()
                     )
                 )
+            # The cancel alphabet button
+            self.root.ids.main.ids.keyboard_layout.add_widget(
+                Button(
+                    text='⛔', on_press=lambda x:
+                    threading.Thread(
+                        target=self.thread_check_validity_from_mobile_keyboard,
+                        args=(grid_ptr, x.text, )
+                    ).start()
+                )
+            )
         # Start the timer event function
         Clock.schedule_interval(self.async_time, 1)
         # Bind android back button to exit
