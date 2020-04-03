@@ -23,6 +23,9 @@
 #
 
 import sys
+import os
+
+os.environ["KIVY_NO_CONSOLELOG"] = '1'
 
 if sys.platform == 'win32':
     def prep_win_standalone():

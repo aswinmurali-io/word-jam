@@ -32,20 +32,6 @@ ScreenManager:
         orientation: 'vertical'
         padding: 5 if not com.IS_MOBILE else 30
 
-        BoxLayout:  # Content Canvas
-            id: content
-            orientation: 'vertical'
-            padding: 15 if not com.IS_MOBILE else 30
-
-            GridLayout:
-                id: grid
-                cols: 14
-                rows: 20
-
-            Image:
-                id: load
-                source: com.RES + 'banner.png'
-
         BoxLayout:
             size_hint_y: 0.08
             orientation: 'horizontal'
@@ -109,6 +95,20 @@ ScreenManager:
                     text_size: self.size
                     color: com.FONT_COLOR
                     text: '[b]00:00:00[/b]'
+
+        BoxLayout:  # Content Canvas
+            id: content
+            orientation: 'vertical'
+            padding: 15 if not com.IS_MOBILE else 30
+
+            GridLayout:
+                id: grid
+                cols: 14
+                rows: 20
+
+            Image:
+                id: load
+                source: com.RES + 'banner.png'
 
         BoxLayout:  # Status bar
             size_hint_y: 0.08

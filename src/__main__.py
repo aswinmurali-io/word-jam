@@ -184,7 +184,6 @@ class WordJam(App):
     def event_keyboard(self, __, key: int, *_) -> None:
         if key == 27 and IS_MOBILE and not WordButton.lock:
             os._exit(0)
-            App.get_running_app().stop()
 
 
 @kivy_timing

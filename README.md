@@ -76,13 +76,13 @@ The build instructions are specified below for desktop
 
 ### Windows
 ```shell
-    $ poetry run python -m nuitka --follow-imports --msvc=14.0 --include-plugin-directory=nuitka-dependencies.py --include-package=src --standalone --windows-disable-console --remove-output main.py
+    $ poetry run python -m nuitka --msvc=14.0 --include-plugin-directory=nuitka-dependencies.py --standalone --windows-disable-console --windows-icon=res/icon.ico --remove-output main.py
     $ poetry run python nuitka-optimise.py
 ```
 
 ### Linux
 ```shell
-    $ poetry run python -m nuitka --mingw64 --follow-imports --include-plugin-directory=nuitka-dependencies.py --include-package=src --standalone main.py
+    $ poetry run python -m nuitka --mingw64 --include-plugin-directory=nuitka-dependencies.py --standalone main.py
     $ poetry run python nuitka-optimise.py
 ```
 
