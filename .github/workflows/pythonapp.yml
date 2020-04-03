@@ -24,7 +24,7 @@ jobs:
       uses: dschep/install-poetry-action@v1.3
     - name: Install Linux Dependencies
       run: |
-        apt-get install python3-setuptools python3-opengl python3-dev build-essential python3-pip libgl1-mesa-dev libgles2-mesa-dev zlib1g-dev
+        sudo apt-get install python3-setuptools python3-opengl python3-dev build-essential python3-pip libgl1-mesa-dev libgles2-mesa-dev zlib1g-dev
     - name: Install Project
       run: |
         poetry install
