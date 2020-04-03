@@ -7,8 +7,8 @@ The project uses `poetry` python package manager to handle the project dependies
 ![alt text](https://www.python.org/static/community_logos/python-powered-w-100x40.png "Python")
 ![alt text](https://raw.githubusercontent.com/kivy/kivy/master/kivy/data/logo/kivy-icon-48.png "Kivy")
 
-## Contributing [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/dwyl/esta/issues)
-## Version [![python version 3.7](https://img.shields.io/badge/start%20with-why%3F-brightgreen.svg?style=flat)](http://www.ted.com/talks/simon_sinek_how_great_leaders_inspire_action)
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/dwyl/esta/issues)
+[![release](https://img.shields.io/github/v/release/aswinmurali-io/word-jam)]
 
 ## Install
 
