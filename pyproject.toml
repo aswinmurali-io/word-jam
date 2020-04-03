@@ -9,9 +9,6 @@ repository = "https://github.com/aswinmurali-io/word-jam"
 
 [tool.poetry.dependencies]
 python = "^3.6"
-pip = "^20.0.2"
-setuptools = "44.0.0"
-virtualenv = "^20.0.15"
 pypiwin32 = { platform = "win32", version = "^223" }
 docutils = "^0.15.2"
 pygments = "^2.5.2"

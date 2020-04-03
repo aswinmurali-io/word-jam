@@ -14,5 +14,7 @@
 # NOTE: Suppress the logging after the game is finished to improve performance
 # NOTE: Clock.schedule_once(self.remove_load_logo, 2) -> set to 1 when building
 # NOTE: import os; os.environ["KIVY_NO_CONSOLELOG"] = '1' use this before build
+# NOTE: add graphics, add levels, optimise linux build, add github actions
+# NOTE: add private .kivy folder for the app
 
 __version__ = '0.1.0'
