@@ -22,7 +22,7 @@ jobs:
         python-version: 3.7
     - name: Install Linux Dependencies
       run: |
-        sudo apt-get install python3-setuptools python3-opengl python3-dev build-essential python3-pip libgl1-mesa-dev libgles2-mesa-dev zlib1g-dev
+        sudo apt-get install python3-setuptools python3-opengl mesa-common-dev python3-dev build-essential python3-pip libgl1-mesa-dev libgles2-mesa-dev zlib1g-dev
     - name: Install Poetry Dependencies
       uses: abatilo/actions-poetry@v1.5.0
       with:

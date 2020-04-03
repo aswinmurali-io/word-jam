@@ -1,14 +1,14 @@
 ![alt text](res/banner.png "Word Jam Official Repo")
 
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/dwyl/esta/issues)
+[!(https://img.shields.io/github/v/release/aswinmurali-io/word-jam)]
+
 Word Jam is a crossword game which you can play during your free time. Made using `python`
 with the help of `kivy` python package.
 The project uses `poetry` python package manager to handle the project dependies.
 
 ![alt text](https://www.python.org/static/community_logos/python-powered-w-100x40.png "Python")
 ![alt text](https://raw.githubusercontent.com/kivy/kivy/master/kivy/data/logo/kivy-icon-48.png "Kivy")
-
-[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/dwyl/esta/issues)
-[![release](https://img.shields.io/github/v/release/aswinmurali-io/word-jam)]
 
 ## Install
 
@@ -17,7 +17,7 @@ The project uses `poetry` python package manager to handle the project dependies
 If your in linux then install the following packages to verify/install the required linux packages
 
 ```shell
-    $ sudo apt-get install python3-setuptools python3-opengl python3-dev \
+    $ sudo apt-get install python3-setuptools python3-opengl python3-dev mesa-common-dev \
       build-essential python3-pip libgl1-mesa-dev libgles2-mesa-dev zlib1g-dev
 ```
 
