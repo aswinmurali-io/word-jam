@@ -23,6 +23,10 @@ jobs:
     - name: Install Linux Dependencies
       run: |
         sudo apt-get install python3-setuptools python3-opengl python3-dev build-essential python3-pip libgl1-mesa-dev libgles2-mesa-dev zlib1g-dev
-    - name: Poetry Install
-      uses: knowsuchagency/poetry-install@v2
+    - name: Install Poetry Dependencies
+      uses: abatilo/actions-poetry@v1.5.0
+      with:
+        python_version: 3.7.0
+        poetry_version: 0.12.17
+        args: install
   
