@@ -1,9 +1,8 @@
 ![alt text](res/banner.png "Word Jam Official Repo")
 
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/dwyl/esta/issues)
-[![release version](https://img.shields.io/github/v/release/aswinmurali-io/word-jam)]
 ![](https://img.shields.io/github/v/release/aswinmurali-io/word-jam)
-![](https://github.com/aswinmurali-io/word-jam/workflows/.github/workflows/pythonapp.yml/badge.svg)
+![deps check](https://github.com/aswinmurali-io/word-jam/workflows/.github/workflows/pythonapp.yml/badge.svg)
 
 Word Jam is a crossword game which you can play during your free time. Made using `python`
 with the help of `kivy` python package.
