@@ -17,7 +17,7 @@ if [ $TRAVIS_OS_NAME = 'osx' ]; then
             $HOME/.poetry/bin/poetry add kivy
             $HOME/.poetry/bin/poetry run python -m nuitka --mingw64 --include-plugin-directory=nuitka-dependencies.py --standalone main.py
             $HOME/.poetry/bin/poetry run python nuitka-optimise.py
-            cp -R main.dist $TRAVIS_BUILD_DIR
+            # chmod +x main.exe
             ;;
     esac
 else
@@ -30,5 +30,5 @@ else
     $HOME/.poetry/bin/poetry add kivy
     $HOME/.poetry/bin/poetry run python -m nuitka --mingw64 --include-plugin-directory=nuitka-dependencies.py --standalone main.py
     $HOME/.poetry/bin/poetry run python nuitka-optimise.py
-    cp -R main.dist $TRAVIS_BUILD_DIR
+    # chmod +x main.exe
 fi
