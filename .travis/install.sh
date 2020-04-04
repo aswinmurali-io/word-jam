@@ -23,10 +23,7 @@ if [ $TRAVIS_OS_NAME = 'osx' ]; then
             sudo cp -a /Volumes/SDL2_ttf/SDL2_ttf.framework /Library/Frameworks/
             hdiutil attach SDL2_mixer-2.0.1.dmg
             sudo cp -a /Volumes/SDL2_mixer/SDL2_mixer.framework /Library/Frameworks/
-            # sudo installer -package gstreamer-1.0-1.7.1-x86_64.pkg -target /
-            # sudo installer -package gstreamer-1.0-devel-1.7.1-x86_64.pkg -target /
             python -m pip install --upgrade --user Cython==0.29.10 pillow
-
             xcode-select --install
             mkdir ~/code
             cd ~/code
