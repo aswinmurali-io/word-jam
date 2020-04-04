@@ -9,5 +9,5 @@ jobs:
       language: generic
       env: TOXENV=py37
 install:
-    - ./.travis/install.sh
+    - sudo ./.travis/install.sh
 script: make test
