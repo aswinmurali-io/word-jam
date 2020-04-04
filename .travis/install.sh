@@ -8,32 +8,24 @@ if [ $TRAVIS_OS_NAME = 'osx' ]; then
     case "${TOXENV}" in
         py37)
             # Install some custom Python 3.2 requirements on macOS
-            curl -O -L https://www.libsdl.org/release/SDL2-2.0.9.dmg
-            curl -O -L https://www.libsdl.org/projects/SDL_image/release/SDL2_image-2.0.1.dmg
-            curl -O -L https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-2.0.1.dmg
-            curl -O -L https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-2.0.13.dmg
-            curl -O -L http://gstreamer.freedesktop.org/data/pkg/osx/1.7.1/gstreamer-1.0-1.7.1-x86_64.pkg
-            curl -O -L http://gstreamer.freedesktop.org/data/pkg/osx/1.7.1/gstreamer-1.0-devel-1.7.1-x86_64.pkg
-            hdiutil attach SDL2-2.0.9.dmg
-            sudo cp -a /Volumes/SDL2/SDL2.framework /Library/Frameworks/
-
-            hdiutil attach SDL2_image-2.0.1.dmg
-            sudo cp -a /Volumes/SDL2_image/SDL2_image.framework /Library/Frameworks/
-            hdiutil attach SDL2_ttf-2.0.13.dmg
-            sudo cp -a /Volumes/SDL2_ttf/SDL2_ttf.framework /Library/Frameworks/
-            hdiutil attach SDL2_mixer-2.0.1.dmg
-            sudo cp -a /Volumes/SDL2_mixer/SDL2_mixer.framework /Library/Frameworks/
-            python -m pip install --upgrade --user Cython==0.29.10 pillow
-            xcode-select --install
-            mkdir ~/code
-            cd ~/code
-            git clone http://github.com/kivy/kivy
-            cd kivy
-            make
-            ;;
-            python -m pip install poetry
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+            # python -m pip install pygments docutils pillow --user
+            brew install sdl2 sdl2_image sdl2_ttf sdl2_mixer gstreamer
+            curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+            poetry remove kivy
             poetry install
+            poetry add kivy
+            poetry run python -m nuitka --mingw64 --include-plugin-directory=nuitka-dependencies.py --standalone main.py
+            poetry run python nuitka-optimise.py
+            ;;
     esac
 else
     # Install some custom requirements on Linux
+    sudo apt-get install python3-setuptools python3-opengl python3-dev mesa-common-dev build-essential python3-pip libgl1-mesa-dev libgles2-mesa-dev zlib1g-dev
+    curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+    poetry remove kivy
+    poetry install
+    poetry add kivy
+    poetry run python -m nuitka --mingw64 --include-plugin-directory=nuitka-dependencies.py --standalone main.py
+    poetry run python nuitka-optimise.py
 fi
