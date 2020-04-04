@@ -5,9 +5,28 @@ jobs:
     - os: linux
       python: 3.7
       env: TOXENV=py37
+      arch:
+        - amd64
+        - ppc64le
+        - s390x
+        - arm64
     - os: osx
       language: generic
       env: TOXENV=py37
+    - os: windows
+      language: generic
+      env: TOXENV=py37
+      before_install:
+      - |-
+          case $TRAVIS_OS_NAME in
+            windows)
+            (Invoke-WebRequest -Uri https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py -UseBasicParsing).Content | python
+            poetry remove kivy
+            poetry install
+            poetry add kivy
+            poetry run python -m nuitka --include-plugin-directory=nuitka-dependencies.py --standalone --windows-disable-console --windows-icon=res/icon.ico --remove-output main.py
+            poetry run python nuitka-optimise.py
+
 install:
     - travis_wait 25 sudo bash .travis/install.sh
 script: echo Done
