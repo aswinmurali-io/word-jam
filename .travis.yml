@@ -10,5 +10,4 @@ jobs:
       env: TOXENV=py37
 install:
     - ./.travis/install.sh
-    - 
 script: make test
