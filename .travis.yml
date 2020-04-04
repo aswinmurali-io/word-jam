@@ -9,6 +9,5 @@ jobs:
       language: generic
       env: TOXENV=py37
 install:
-    - travis_wait 25 mvn install
-    - sudo bash .travis/install.sh
+    - travis_wait 25 sudo bash .travis/install.sh
 script: echo Done
