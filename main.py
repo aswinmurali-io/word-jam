@@ -19,8 +19,6 @@
 # For best pratice enable Windows Subsystem For Linux to develop in mobiles
 # Developed in CPython-3. Licensed under the following license type :-
 #
-#      Mozilla Public License Version 2.0
-#
 
 import sys
 import os
