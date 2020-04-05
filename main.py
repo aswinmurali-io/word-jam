@@ -19,7 +19,7 @@
 # For best pratice enable Windows Subsystem For Linux to develop in mobiles
 # Developed in CPython-3. Licensed under the following license type :-
 #
-
+"""
 import sys
 import os
 
@@ -51,6 +51,7 @@ if sys.platform == 'win32':
         sys.__stderr__ = DummyStream()
 
     prep_win_standalone()
+"""
 
 from src.__main__ import main
 

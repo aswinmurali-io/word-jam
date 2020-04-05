@@ -34,6 +34,7 @@ from src.common import (
     LVL,
     MAX_GRID,
     IS_MOBILE,
+    FONT_COLOR,
     DB_CONNECTION,
     get,
     save,
@@ -66,7 +67,9 @@ class WordJam(App):
                 # Schedule in clock to make it faster (lazy loading)
                 self.root.ids.main.ids.keyboard_layout.add_widget(
                     Button(
-                        text=chr(i), on_press=lambda x:
+                        text=chr(i), bold=True,
+                        background_normal=RES + 'grey-button-normal.png',
+                        color=FONT_COLOR, on_press=lambda x:
                         threading.Thread(
                             target=self.thread_check_validity_from_mobile_keyboard,
                             args=(grid_ptr, x.text, )
@@ -76,7 +79,7 @@ class WordJam(App):
             # The cancel alphabet button
             self.root.ids.main.ids.keyboard_layout.add_widget(
                 Button(
-                    text='⛔', on_press=lambda x:
+                    text='⛔', bold=True, font_size=27, on_press=lambda x:
                     threading.Thread(
                         target=self.thread_check_validity_from_mobile_keyboard,
                         args=(grid_ptr, x.text, )
@@ -167,7 +170,7 @@ class WordJam(App):
     def async_grid(self, *_) -> bool:
         # Reset the grid id to freshly start the deque GRID for next level
         reset_grid_id()
-        self.root.ids.main.ids.grid.clear_widgets()
+        # self.root.ids.main.ids.grid.clear_widgets()
         # Clean the previous level grids for new once. Must be in clock
         Clock.schedule_once(lambda x: self.root.ids.main.ids.grid.clear_widgets())
         grid_ptr.clear()
@@ -182,7 +185,7 @@ class WordJam(App):
     # Exit handler for android and other mobile devices
     @kivy_timing
     def event_keyboard(self, __, key: int, *_) -> None:
-        if key == 27 and IS_MOBILE and not WordButton.lock:
+        if key == 27 and IS_MOBILE:
             os._exit(0)
 
 
@@ -193,6 +196,7 @@ def main() -> None:
         shutil.copyfile(LVL + "1.csv", LVL + "save.csv")
     # Load the level
     load_level("save")
+    # load_level(get(level_number=True))
     # Fix blurry font because text scale issue in windows
     if "win32" in sys.platform:
         ctypes.windll.shcore.SetProcessDpiAwareness(1)

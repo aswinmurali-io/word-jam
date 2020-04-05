@@ -18,7 +18,7 @@ RES: str = PATH + "/res/"  # The folder where the resources are stored
 SRC: str = PATH + "/src/"  # The folder where the source code is located
 FONT_COLOR: tuple = (0.5, 0.5, 0.5, 1)  # The font color of the game
 IS_MOBILE: bool = True if "android" in sys.modules else False  # mobile detection
-DEFAULT_ATLAS: str = "atlas://data/images/defaulttheme/button"
+DEFAULT_ATLAS: str = RES + 'grey-button-normal.png'  # "atlas://data/images/defaulttheme/button"
 DEFAULT_STATUS_TEXT: str = "Made by [b]AshBlade[/b]"
 
 # The level progress variables

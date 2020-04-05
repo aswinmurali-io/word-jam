@@ -29,24 +29,31 @@ def load_level(number) -> None:
     global GRID, GRID_HINT, level_total_progress
     level_total_progress = 0
     GRID_HINT.clear()
+    # To load the level hint which are stored in level.csv and not save.csv
     with open(LVL + str(get(level_number=True)) + ".csv") as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=",")
         for row in csv_reader:
-            hint_row, one_char_row = [], []
+            hint_row = []
             for i in range(len(row)):
                 hint_row.append(row[i][1:])
+            GRID_HINT += hint_row
+    # To load the current save state of the current level is only possible by
+    # using the save.csv file
+    with open(LVL + "save.csv") as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=",")
+        for row in csv_reader:
+            one_char_row = []
+            for i in range(len(row)):
                 one_char_row.append(row[i][0])
             GRID += one_char_row
             for char in one_char_row:
                 if char.islower():
                     level_total_progress += 1
-            GRID_HINT += hint_row
 
 
 @timing
 def validate_character(char: str, grid_id: int) -> bool:
     global level_progress, coin_progress, level_number, level_total_progress
-
     if GRID[int(grid_id)] == char:
         level_progress += 1
         if level_progress >= level_total_progress:

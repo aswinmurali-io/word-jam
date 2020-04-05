@@ -124,9 +124,10 @@ class WordButton(Button):
 
                 elif selection == '0':
                     self.next_auto_selection_id = '0'
+
                 for widget in grid_ptr:
                     try:
-                        if widget.id == self.next_auto_selection_id != self.id and not widget.text.upper():
+                        if widget.id == self.next_auto_selection_id != self.id and not widget.text.upper() and self.text != "":
                             widget.background_normal = ""
                             widget.background_color = 0, 1, 1, 1
                             widget.text = '?'
