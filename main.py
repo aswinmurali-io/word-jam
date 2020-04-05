@@ -18,15 +18,23 @@
 #
 # For best pratice enable Windows Subsystem For Linux to develop in mobiles
 # Developed in CPython-3. Licensed under the following license type :-
-#
-"""
+
 import sys
 import os
 
-os.environ["KIVY_NO_CONSOLELOG"] = '1'
+from src.__main__ import main
 
-if sys.platform == 'win32':
-    def prep_win_standalone():
+__version__ = '0.0.1'
+
+# Entry point
+if __name__ == "__main__":
+    # Disable logging to gain performance in android devices
+    if sys.platform == 'android':
+        os.environ["KIVY_NO_CONSOLELOG"] = '1'
+
+    # Redirect all the stdout and stder etc to dummy object
+    # this is required to get it compiled in nuitka correctly
+    if sys.platform == 'win32':
         class DummyStream():
             def __init__(self):
                 pass
@@ -50,13 +58,5 @@ if sys.platform == 'win32':
         sys.__stdout__ = DummyStream()
         sys.__stderr__ = DummyStream()
 
-    prep_win_standalone()
-"""
-
-from src.__main__ import main
-
-__version__ = '0.0.1'
-
-# Entry point
-if __name__ == "__main__":
+    # The game entry main function
     main()
