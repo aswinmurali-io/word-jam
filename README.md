@@ -16,6 +16,8 @@ The project uses `poetry` python package manager to handle the project dependies
 
 > if your on linux you need to make sure you have the proper graphic drivers installed. Check if you have the `libgl1-mesa-dev` linux package installed in your linux distro to run the game
 
+### Linux
+
 If your in linux then install the following packages to verify/install the required linux packages
 
 ```shell
@@ -23,13 +25,17 @@ If your in linux then install the following packages to verify/install the requi
       build-essential python3-pip libgl1-mesa-dev libgles2-mesa-dev zlib1g-dev
 ```
 
+### Mac
+
 If your in mac then install the following packages to verify/install the required mac packages
 
 > You need homebrew package manager for installing mac os packages. Install homebrew from https://brew.sh/
 
 ```shell
-    $ brew install sdl2 sdl2_image sdl2_ttf sdl2_mixer gstreamer
+    $ brew install sdl2 sdl2_image sdl2_ttf sdl2_mixer
 ```
+
+### Project Dependencies
 
 The `poetry install` command can be used to install all the dependies for the project.
 The dependies are stored in a virtual env. To install the `poetry` package refer [Poetry Installation Docs](https://python-poetry.org/docs/#installation)
@@ -89,7 +95,7 @@ The build instructions are specified below for desktop
     $ poetry run python nuitka-optimise.py
 ```
 
-### Linux
+### Linux / Mac
 ```shell
     $ poetry run python -m nuitka --mingw64 --include-plugin-directory=nuitka-dependencies.py --standalone main.py
     $ poetry run python nuitka-optimise.py

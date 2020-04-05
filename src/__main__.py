@@ -1,8 +1,6 @@
 # !/usr/bin/python
 # The main game code
 
-# NOTE: optimise the async_lazy_load_level_list(), validate_character()
-
 import sys
 import kivy
 import glob
@@ -32,6 +30,7 @@ from src.monitor import (
 from src.common import (
     SRC,
     LVL,
+    RES,
     MAX_GRID,
     IS_MOBILE,
     FONT_COLOR,
