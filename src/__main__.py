@@ -7,8 +7,8 @@ import glob
 import shutil
 import ctypes
 import os.path
-import threading
 import datetime
+import threading
 
 from kivy.app import App
 from kivy.clock import Clock
@@ -21,11 +21,7 @@ from kivy.uix.button import Button
 from src.config import *
 from src.save import load_level
 from src.grid import WordButton, grid_ptr
-
-from src.monitor import (
-    timing,
-    kivy_timing
-)
+from src.monitor import timing, kivy_timing
 
 from src.common import (
     SRC,
