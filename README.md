@@ -23,6 +23,14 @@ If your in linux then install the following packages to verify/install the requi
       build-essential python3-pip libgl1-mesa-dev libgles2-mesa-dev zlib1g-dev
 ```
 
+If your in mac then install the following packages to verify/install the required mac packages
+
+> You need homebrew package manager for installing mac os packages. Install homebrew from https://brew.sh/
+
+```shell
+    $ brew install sdl2 sdl2_image sdl2_ttf sdl2_mixer gstreamer
+```
+
 The `poetry install` command can be used to install all the dependies for the project.
 The dependies are stored in a virtual env. To install the `poetry` package refer [Poetry Installation Docs](https://python-poetry.org/docs/#installation)
 

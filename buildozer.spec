@@ -7,7 +7,7 @@ title = Word Jam
 package.name = wordjam
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = org.blitzon
+package.domain = org.ashblade
 
 # (str) Source code where the main.py live
 source.dir = .
@@ -19,13 +19,13 @@ source.include_exts = py,png,jpg,kv,atlas,gif,so,csv,sql
 #source.include_patterns = assets/*,images/*.png
 
 # (list) Source files to exclude (let empty to not exclude anything)
-source.exclude_exts = spec,LICENSE,ico,save.csv,save.db
+source.exclude_exts = spec,LICENSE,ico,db
 
 # (list) List of directory to exclude (let empty to not exclude anything)
 source.exclude_dirs = tests,bin,logs,main.dist,main.build,des,data
 
 # (list) List of exclusions using pattern matching
-#source.exclude_patterns = license,images/*/*.jpg
+source.exclude_patterns = LICENSE,nuitka-dependencies.py,nuitka-optimise.py
 
 # (str) Application versioning (method 1)
 # version = 0.1
@@ -36,7 +36,7 @@ version.filename = %(source.dir)s/main.py
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3, kivy, colorama, sqlite3, , jnius, kivmob
+requirements = python3, kivy, colorama, sqlite3, kivmob
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
