@@ -20,7 +20,6 @@ ScreenManager:
 <WordButton@Button>:
     background_normal: com.RES + 'grey-button-normal.png'
     background_down: com.RES + 'grey-button-active.png'
-    # background_disabled_normal: com.RES + 'grey-button-disabled.png'
     bold: True
     color: com.FONT_COLOR
     on_touch_down: app.root.ids.main.ids.status_bar.text = ("Press [b]ESC[/b] to cancel selection" if not com.IS_MOBILE else "Press [b]any[/b] letter to cancel selection") + ((", [b]hint[/b]: " + com.GRID_HINT[int(self.id)][1:-3] if com.GRID_HINT[int(self.id)][-4] != ')' else ", [b]hint[/b]: " + com.GRID_HINT[int(self.id)][1:-4]) if com.GRID_HINT[int(self.id)][1:-1] != "" else "")
@@ -31,6 +30,7 @@ ScreenManager:
     canvas.before:
         Color:
             rgba: 1, 1, 1, 1
+            # rgba: 0, 0, 0, 1
         Rectangle:
             pos: self.pos
             size: self.size

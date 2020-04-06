@@ -118,7 +118,7 @@ class WordJam(App):
                     x.level_time = "In Progress, No Records Found"
             root.ids.level_list_layout.add_widget(x)
 
-    # @kivy_timing -> thread
+    # @kivy_timing  # -> thread
     def async_time(self, *_) -> None:
         global stime
         # NOTE: The level_number variable is not updating properly may be
