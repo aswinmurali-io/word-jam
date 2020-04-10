@@ -19,6 +19,8 @@
 # For best pratice enable Windows Subsystem For Linux to develop in mobiles
 # Developed in CPython-3. Licensed under the following license type :-
 
+# python reloader.py -i *.db,save.csv,*.db-journal -a restart python -m src 
+
 import sys
 import os
 

@@ -110,7 +110,9 @@ The build instructions are specified below for desktop
 
 > The compiled android app will be stored in bin folder
 
-### Development
+## Development
+
+### Type checking
 
 To do type check which this project follows. We use the `mypy` module. Note you need atleast `Python 3.7`
 to do type checking. To check error type the following command
@@ -119,10 +121,23 @@ to do type checking. To check error type the following command
     $ poetry run mypy --package src --ignore-missing-imports
 ```
 
+### Python Android Log
+
 > There may or may not be errors found. Things that are dynamically loaded will not be recognised and therefore show error
 
 To see the android application's log use android `adb` command. Type the following command to filter python logcat
 
 ```shell
     $ adb -d logcat *:S python:D
+```
+
+### Live Reload Code
+
+This project supports live reload where the project auto restart itself when there is changes in the source or resource folder. To make it work you need to clone the https://github.com/kivy/pythonar.git project and then copy the reloader.py
+file inside the project directory after that run the below command.
+
+> The below command will only auto restart when changes in the src ans res folder occur
+
+```shell
+    $ python reloader.py -i *.db,save.csv,*.db-journal -p src,res -a restart python -m src
 ```

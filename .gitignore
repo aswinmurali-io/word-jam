@@ -3,6 +3,9 @@
 bin/
 main.build
 main.dist
+reloader.py
+six.py
+.db-journal
 
 # Power Point live edit file
 ~$src.pptx
