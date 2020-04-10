@@ -136,7 +136,7 @@ To see the android application's log use android `adb` command. Type the followi
 This project supports live reload where the project auto restart itself when there is changes in the source or resource folder. To make it work you need to clone the https://github.com/kivy/pythonar.git project and then copy the reloader.py
 file inside the project directory after that run the below command.
 
-> The below command will only auto restart when changes in the src ans res folder occur
+> The below command will only auto restart when changes in the src and res folder occur
 
 ```shell
     $ python reloader.py -i *.db,save.csv,*.db-journal -p src,res -a restart python -m src

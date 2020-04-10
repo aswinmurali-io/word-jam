@@ -6,6 +6,7 @@ main.dist
 reloader.py
 six.py
 .db-journal
+*.profile
 
 # Power Point live edit file
 ~$src.pptx

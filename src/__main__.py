@@ -8,6 +8,7 @@ import shutil
 import ctypes
 import os.path
 import datetime
+import cProfile
 import threading
 
 from kivy.app import App
@@ -17,6 +18,7 @@ from kivy.logger import Logger
 from kivy.base import EventLoop
 from kivy.factory import Factory
 from kivy.uix.button import Button
+from kivy.core.window import Window
 
 from src.config import *
 from src.save import load_level
@@ -40,6 +42,9 @@ from src.common import (
 # COIN_PROGRESS, LEVEL_NUMBER, LEVEL_PROGRESS, LEVEL_TIME
 kivy.require("1.11.0")
 stime: str = get(level_time=True)  # The level time counter
+# To position window for live reload of the project
+Window.top = 100
+Window.left = 10
 
 
 class WordJam(App):
@@ -202,4 +207,4 @@ def main() -> None:
 
 
 # Entry point
-main() if __name__ == "__main__" else None
+cProfile.run('main()') if __name__ == "__main__" else None
