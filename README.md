@@ -4,6 +4,8 @@ Word Jam is a crossword game which you can play during your free time. Made usin
 with the help of `kivy` python package.
 The project uses `poetry` python package manager to handle the project dependies.
 
+> THE PROJECT IS STILL IN ALPHA STAGE. PROPER LEVELS ARE NOT BUILD YET
+
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/dwyl/esta/issues)
 ![](https://img.shields.io/github/v/release/aswinmurali-io/word-jam)
 ![Configure Check](https://github.com/aswinmurali-io/word-jam/workflows/Word%20Jam%20Project%20Configure%20Check/badge.svg?branch=master)
